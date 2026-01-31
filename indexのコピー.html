@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一般社団法人くらくサポート 定款 - インフォグラフィック</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #6d4c41;
+            --bg-color: #e8f5e9;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            margin: 0;
+            padding: 10px; /* スマホ向けに外側の余白を縮小 */
+            line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 10px auto;
+            background-color: var(--card-bg);
+            padding: 20px; /* スマホ向けに内側を調整 */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
+            border: 2px solid #a5d6a7;
+            box-sizing: border-box;
+        }
+
+        /* ヘッダーセクション */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            display: flex;
+            flex-direction: column; /* スマホでは縦並び */
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.5rem; /* iPhone12で1行に収まりやすいサイズ */
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .header .logo {
+            height: 50px; /* スマホで見やすいサイズに固定 */
+            width: auto;
+        }
+
+        /* 見出し */
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 35px 0 20px 0;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            word-break: keep-all; /* 変な改行を防ぐ */
+        }
+
+        .section-title .icon {
+            font-size: 1.4em;
+        }
+
+        /* 目的セクション */
+        .purpose-box {
+            background-color: #f1f8e9;
+            border: 2px dashed #81c784;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .purpose-box p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0 0 10px 0;
+            text-align: left;
+        }
+
+        .purpose-box .highlight {
+            font-weight: 700;
+            color: #2e7d32;
+            background: linear-gradient(transparent 70%, #c8e6c9 70%); /* 読みやすく強調 */
+        }
+
+        /* カードレイアウト共通 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr; /* スマホは1列 */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border-bottom: 5px solid var(--secondary-color);
+            transition: transform 0.2s;
+        }
+
+        .card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            display: block;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            margin: 0 0 10px 0;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* 基本情報セクション */
+        .info-box {
+            background-color: #f3e5f5;
+            border: 2px solid #ba68c8;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .info-item:last-child { margin-bottom: 0; }
+
+        .info-item .icon {
+            font-size: 1.4rem;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .info-item p {
+            margin: 0;
+            font-size: 0.95rem;
+            word-break: break-all;
+        }
+
+        /* タブレット・PC向け調整 */
+        @media (min-width: 600px) {
+            .container { padding: 40px; margin: 30px auto; }
+            .header h1 { flex-direction: row; font-size: 2.2rem; }
+            .header .logo { height: 60px; }
+            .section-title { font-size: 1.8rem; }
+            .grid-container { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+            .purpose-box { padding: 30px; }
+            .purpose-box p { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>
+               <!-- <img src="./img/f001bc9a-3775-4929-a7ce-d0fcc9496393.png" alt="くらくサポート ロゴ" class="logo"> -->
+                <span>一般社団法人<br>くらくサポート</span>
+            </h1>                
+        </header>
+
+        <section>
+            <h2 class="section-title">私たちの目的</h2>
+            <div class="purpose-box">
+                <p>この法人は、<span class="highlight">サポートを必要としている人</span>、<span class="highlight">自分の知識や経験を増やしたい人</span>、または<span class="highlight">提供したい人</span>、<span class="highlight">自分の活躍の場を探している</span>、または<span class="highlight">活躍したいと思っている人</span>に、</p>
+                <p>生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、<span class="highlight">豊かな生活の実現をサポートすること</span>を目的とします。</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title"><span class="icon">🤝</span> こんな人たちを応援します！</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <span class="icon">🆘</span>
+                    <h3>サポートを<br>必要としている人</h3>
+                    <p>生活の中で困りごとを抱えていたり、新しい一歩を踏み出したいけれど、どうしたらいいか分からないと感じている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">💡</span>
+                    <h3>知識や経験を<br>増やしたい人</h3>
+                    <p>新しいことを学びたい、スキルアップしたい、自分の可能性を広げたいと意欲を持っている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🎁</span>
+                    <h3>知識や経験を<br>提供したい人</h3>
+                    <p>これまでの経験や持っているスキルを活かして、誰かの役に立ちたい、社会に貢献したいと考えている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🌟</span>
+                    <h3>活躍の場を<br>探している人</h3>
+                    <p>自分の力を試したい、新しい場所でチャレンジしたい、社会とのつながりを持ちたいと願っている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🚀</span>
+                    <h3>活躍したいと<br>思っている人</h3>
+                    <p>自分の能力を最大限に発揮し、目標を達成したいと強く願っている方。</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title"><span class="icon">🌈</span> 私たちの事業内容</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <span class="icon">🤝</span>
+                    <h3>交流促進事業</h3>
+                    <p>知識や経験を共有し合い、仲間とのつながりを作るための活動です。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🧑‍🍳</span>
+                    <h3>職業訓練事業</h3>
+                    <p>様々な体験を通じて自分の可能性を発見し、活躍の場を広げるためのサポートです。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🌳</span>
+                    <h3>社会参加の機会創出事業</h3>
+                    <p>人と社会との繋がりを深めるための、社会に参加する機会を作ります。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">✨</span>
+                    <h3>その他必要な事業</h3>
+                    <p>上記の目的を達成するために必要な、その他の活動を行います。</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="info-box">
+                <div class="info-item">
+                    <span class="icon">🏷️</span>
+                    <p><strong>名称：</strong><br>一般社団法人くらくサポート</p>
+                </div>
+                <div class="info-item">
+                    <span class="icon">📍</span>
+                    <p><strong>主たる事務所：</strong><br>沖縄県豊見城市</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

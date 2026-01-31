@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一般社団法人くらくサポート 定款 - インフォグラフィック</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -20,7 +22,8 @@
             background-color: var(--bg-color);
             color: #333;
             margin: 0;
-            padding: 10px; /* スマホ向けに外側の余白を縮小 */
+            padding: 10px;
+            /* スマホ向けに外側の余白を縮小 */
             line-height: 1.6;
             -webkit-text-size-adjust: 100%;
         }
@@ -29,7 +32,8 @@
             max-width: 850px;
             margin: 10px auto;
             background-color: var(--card-bg);
-            padding: 20px; /* スマホ向けに内側を調整 */
+            padding: 20px;
+            /* スマホ向けに内側を調整 */
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
             border: 2px solid #a5d6a7;
@@ -44,18 +48,21 @@
 
         .header h1 {
             display: flex;
-            flex-direction: column; /* スマホでは縦並び */
+            flex-direction: column;
+            /* スマホでは縦並び */
             align-items: center;
             justify-content: center;
             gap: 10px;
-            font-size: 1.5rem; /* iPhone12で1行に収まりやすいサイズ */
+            font-size: 1.5rem;
+            /* iPhone12で1行に収まりやすいサイズ */
             font-weight: 800;
             color: var(--primary-color);
             margin: 0;
         }
 
         .header .logo {
-            height: 50px; /* スマホで見やすいサイズに固定 */
+            height: 50px;
+            /* スマホで見やすいサイズに固定 */
             width: auto;
         }
 
@@ -70,7 +77,8 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            word-break: keep-all; /* 変な改行を防ぐ */
+            word-break: keep-all;
+            /* 変な改行を防ぐ */
         }
 
         .section-title .icon {
@@ -96,13 +104,15 @@
         .purpose-box .highlight {
             font-weight: 700;
             color: #2e7d32;
-            background: linear-gradient(transparent 70%, #c8e6c9 70%); /* 読みやすく強調 */
+            background: linear-gradient(transparent 70%, #c8e6c9 70%);
+            /* 読みやすく強調 */
         }
 
         /* カードレイアウト共通 */
         .grid-container {
             display: grid;
-            grid-template-columns: 1fr; /* スマホは1列 */
+            grid-template-columns: 1fr;
+            /* スマホは1列 */
             gap: 15px;
             margin-top: 20px;
         }
@@ -111,7 +121,7 @@
             background-color: #fff;
             border-radius: 15px;
             padding: 18px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             border-bottom: 5px solid var(--secondary-color);
             transition: transform 0.2s;
         }
@@ -152,7 +162,9 @@
             margin-bottom: 12px;
         }
 
-        .info-item:last-child { margin-bottom: 0; }
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
 
         .info-item .icon {
             font-size: 1.4rem;
@@ -168,30 +180,184 @@
 
         /* タブレット・PC向け調整 */
         @media (min-width: 600px) {
-            .container { padding: 40px; margin: 30px auto; }
-            .header h1 { flex-direction: row; font-size: 2.2rem; }
-            .header .logo { height: 60px; }
-            .section-title { font-size: 1.8rem; }
-            .grid-container { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-            .purpose-box { padding: 30px; }
-            .purpose-box p { font-size: 1.1rem; }
+            .container {
+                padding: 40px;
+                margin: 30px auto;
+            }
+
+            .header h1 {
+                flex-direction: row;
+                font-size: 2.2rem;
+            }
+
+            .header .logo {
+                height: 60px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            }
+
+            .purpose-box {
+                padding: 30px;
+            }
+
+            .purpose-box p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* モーダル - Phase2追加 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            padding: 10px;
+            /* スマホでの余白確保 */
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #666;
+            line-height: 1;
+            z-index: 10;
+        }
+
+        .modal-images img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .past-event-btn {
+            display: block;
+            width: 100%;
+            background: #fff;
+            border: 2px dashed #ba68c8;
+            color: #ba68c8;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background 0.2s, transform 0.1s;
+            box-sizing: border-box;
+        }
+
+        .past-event-btn:hover {
+            background: #f3e5f5;
+            transform: translateY(-2px);
+        }
+
+        /* ポラロイド風プレビュー - Phase3追加 */
+        .past-event-preview {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            pointer-events: none;
+            /* クリックは親のdivが受け取る */
+        }
+
+        .polaroid {
+            background: #fff;
+            padding: 8px 8px 25px 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transform: rotate(-3deg);
+            transition: transform 0.3s;
+            width: 100px;
+            text-align: center;
+        }
+
+        .polaroid:nth-child(2) {
+            transform: rotate(4deg);
+            z-index: 1;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(30%);
+        }
+
+        .past-event-btn:hover .polaroid {
+            transform: rotate(0deg) scale(1.1);
+            z-index: 2;
+        }
+
+        .past-event-btn:hover .polaroid img {
+            filter: grayscale(0%);
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header class="header">
             <h1>
-               <!-- <img src="./img/f001bc9a-3775-4929-a7ce-d0fcc9496393.png" alt="くらくサポート ロゴ" class="logo"> -->
+                <!-- <img src="./img/f001bc9a-3775-4929-a7ce-d0fcc9496393.png" alt="くらくサポート ロゴ" class="logo"> -->
                 <span>一般社団法人<br>くらくサポート</span>
-            </h1>                
+            </h1>
         </header>
+
+        <section>
+            <h2 class="section-title"><span class="icon">📢</span> お知らせ</h2>
+            <div class="purpose-box" style="text-align: center;">
+                <h3 style="color: var(--secondary-color); font-size: 1.4rem; margin-bottom: 15px;">第2回 くらくサロン 開催！</h3>
+                <p>2026年1月31日（土）に「第2回 くらくサロン」を実施します。</p>
+                <img src="./260131kuraku-salon.jpg" alt="第2回くらくサロン チラシ"
+                    style="width: 100%; max-width: 100%; height: auto; border-radius: 10px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            </div>
+        </section>
 
         <section>
             <h2 class="section-title">私たちの目的</h2>
             <div class="purpose-box">
-                <p>この法人は、<span class="highlight">サポートを必要としている人</span>、<span class="highlight">自分の知識や経験を増やしたい人</span>、または<span class="highlight">提供したい人</span>、<span class="highlight">自分の活躍の場を探している</span>、または<span class="highlight">活躍したいと思っている人</span>に、</p>
-                <p>生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、<span class="highlight">豊かな生活の実現をサポートすること</span>を目的とします。</p>
+                <p>この法人は、<span class="highlight">サポートを必要としている人</span>、<span
+                        class="highlight">自分の知識や経験を増やしたい人</span>、または<span class="highlight">提供したい人</span>、<span
+                        class="highlight">自分の活躍の場を探している</span>、または<span class="highlight">活躍したいと思っている人</span>に、</p>
+                <p>生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、<span class="highlight">豊かな生活の実現をサポートすること</span>を目的とします。
+                </p>
             </div>
         </section>
 
@@ -264,6 +430,57 @@
                 </div>
             </div>
         </section>
+
+        <!-- 過去開催のアーカイブ -->
+        <section>
+            <div onclick="openModal()" class="past-event-btn">
+                <div class="past-event-preview">
+                    <div class="polaroid">
+                        <img src="./260914.png" alt="チラシ">
+                    </div>
+                    <div class="polaroid">
+                        <img src="./2026-09-14.JPG" alt="写真">
+                    </div>
+                </div>
+                📖 過去の活動：第1回 くらくサロン（2025/9/14）の様子
+            </div>
+        </section>
     </div>
+
+    <!-- モーダル本体 -->
+    <div id="modal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModalBtn()">&times;</span>
+            <h3 style="text-align:center; color:var(--secondary-color); margin-top:0;">第1回 くらくサロン</h3>
+            <div class="modal-images">
+                <p><strong>チラシ：</strong></p>
+                <img src="./260914.png" alt="第1回チラシ">
+                <p><strong>開催の様子：</strong></p>
+                <img src="./2026-09-14.JPG" alt="開催写真">
+            </div>
+            <div style="text-align:center;">
+                <button onclick="closeModalBtn()"
+                    style="padding:10px 20px; background:var(--secondary-color); color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; // 背景スクロール固定
+        }
+        function closeModal(e) {
+            if (e.target === document.getElementById('modal')) {
+                document.getElementById('modal').classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        function closeModalBtn() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    </script>
 </body>
+
 </html>
