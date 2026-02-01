@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>くらくサポート会員規則</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .toggle-btn {
+            background: white;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ポンチ絵スタイル */
+        .sketch-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .member-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .member-box {
+            border: 3px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            background: #fff;
+            position: relative;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+        }
+
+        .member-box::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+        }
+
+        .member-box.regular::before {
+            content: '① 正会員';
+            color: #e74c3c;
+        }
+
+        .member-box.general::before {
+            content: '② 一般会員';
+            color: #3498db;
+        }
+
+        .member-box.supporter::before {
+            content: '③ 賛助会員';
+            color: #2ecc71;
+        }
+
+        .member-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .member-box.regular .member-header {
+            color: #e74c3c;
+        }
+
+        .member-box.general .member-header {
+            color: #3498db;
+        }
+
+        .member-box.supporter .member-header {
+            color: #2ecc71;
+        }
+
+        .emoji {
+            font-size: 28px;
+            margin-right: 10px;
+        }
+
+        .definition {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .services {
+            margin-top: 15px;
+        }
+
+        .services h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .service-item {
+            padding: 8px 0 8px 20px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .service-item::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .member-box.regular .service-item::before {
+            color: #e74c3c;
+        }
+
+        .member-box.general .service-item::before {
+            color: #3498db;
+        }
+
+        .member-box.supporter .service-item::before {
+            color: #2ecc71;
+        }
+
+        /* インフォグラフィックスタイル */
+        .info-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .comparison-table {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-card {
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .comparison-card.regular {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .comparison-card.general {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .comparison-card.supporter {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .card-content {
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .card-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .card-item::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            font-size: 10px;
+        }
+
+        .stats-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .stats-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-box.regular .stat-value {
+            color: #e74c3c;
+        }
+
+        .stat-box.general .stat-value {
+            color: #3498db;
+        }
+
+        .stat-box.supporter .stat-value {
+            color: #2ecc71;
+        }
+
+        /* 比較表スタイル */
+        .comparison-view-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .comparison-table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .comparison-table-grid {
+            display: table;
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .table-header {
+            display: table-row;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .table-row {
+            display: table-row;
+        }
+
+        .table-row:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .table-cell {
+            display: table-cell;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+
+        .table-header .table-cell {
+            border-bottom: none;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .category-cell {
+            font-weight: bold;
+            background: #f0f0f0;
+            width: 25%;
+            color: #333;
+        }
+
+        .regular-cell {
+            width: 25%;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .general-cell {
+            width: 25%;
+            border-left: 3px solid #3498db;
+        }
+
+        .supporter-cell {
+            width: 25%;
+            border-left: 3px solid #2ecc71;
+        }
+
+        .cell-content {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .cell-highlight {
+            background: #fff3cd;
+            padding: 5px 8px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 3px 0;
+            font-size: 13px;
+        }
+
+        .check-mark {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .cross-mark {
+            color: #e74c3c;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .icon-header {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .toggle-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                margin: 0 5px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .sketch-title,
+            .info-title {
+                font-size: 18px;
+            }
+
+            .comparison-table {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .member-box {
+                padding: 15px;
+            }
+
+            .member-header {
+                font-size: 16px;
+            }
+
+            .emoji {
+                font-size: 24px;
+            }
+
+            .service-item,
+            .definition {
+                font-size: 13px;
+            }
+
+            .comparison-card {
+                padding: 15px;
+            }
+
+            .card-icon {
+                font-size: 35px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+
+            .card-content {
+                font-size: 12px;
+            }
+
+            .comparison-view-title {
+                font-size: 18px;
+            }
+
+            .table-cell {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .table-header .table-cell {
+                font-size: 13px;
+                padding: 12px 8px;
+            }
+
+            .cell-content {
+                font-size: 12px;
+            }
+
+            .cell-highlight {
+                font-size: 11px;
+            }
+
+            .feature-list li {
+                font-size: 11px;
+            }
+
+            .icon-header {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>くらくサポート会員規則作成にむけて</h1>
+            <p>会員区分ごとの役割と想定サービス</p>
+        </div>
+
+        <div class="toggle-container">
+            <button class="toggle-btn active" onclick="switchView('sketch')">ポンチ絵</button>
+            <button class="toggle-btn" onclick="switchView('infographic')">インフォグラフィック</button>
+            <button class="toggle-btn" onclick="switchView('comparison')">比較表</button>
+        </div>
+
+        <div class="content">
+            <!-- ポンチ絵ビュー -->
+            <div id="sketch-view" class="view active">
+                <h2 class="sketch-title">会員区分と役割の全体像</h2>
+                
+                <div class="member-flow">
+                    <div class="member-box regular">
+                        <div class="member-header">
+                            <span class="emoji">👔</span>
+                            <span>正会員(運営・参画型)</span>
+                        </div>
+                        <div class="definition">
+                            <strong>定義:</strong> 資金と労力を提供し、法人の社員として議決権を持つ
+                        </div>
+                        <div class="services">
+                            <h4>想定サービス・役割:</h4>
+                            <div class="service-item">
+                                <strong>経営・企画への参画:</strong> 社員総会での議決権行使、事業計画の立案
+                            </div>
+                            <div class="service-item">
+                                <strong>リーダーシップの発揮:</strong> 職業訓練事業の講師や交流事業のリーダー(メンター)としての活動
+                            </div>
+                            <div class="service-item">
+                                <strong>限定情報の共有:</strong> 運営会議への出席や、事業報告の先行閲覧
+                            </div>
+                            <div class="service-item">
+                                <strong>インセンティブ:</strong> 自身の専門性や志を法人の事業として形にできる「自己実現」の場
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="member-box general">
+                        <div class="member-header">
+                            <span class="emoji">🤝</span>
+                            <span>一般会員(サービス利用・活動型)</span>
+                        </div>
+                        <div class="definition">
+                            <strong>定義:</strong> サービスの提供・利用を主とする個人
+                        </div>
+                        <div class="services">
+                            <h4>想定サービス:</h4>
+                            <div class="service-item">
+                                <strong>交流促進:</strong> 「くらくサロン」への優先参加、会員専用コミュニティへのアクセス
+                            </div>
+                            <div class="service-item">
+                                <strong>職業訓練:</strong> スキルアップ講座、就労体験プロジェクト、資格取得支援などの受講
+                            </div>
+                            <div class="service-item">
+                                <strong>社会参加:</strong> 法人が提供するボランティア案件や、活躍の場(仕事・役割)の紹介
+                            </div>
+                            <div class="service-item">
+                                <strong>個別相談:</strong> 生活の質向上のためのカウンセリングや、キャリアコンサルティング
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="member-box supporter">
+                        <div class="member-header">
+                            <span class="emoji">💝</span>
+                            <span>賛助会員(支援・スポンサー型)</span>
+                        </div>
+                        <div class="definition">
+                            <strong>定義:</strong> 事業を賛助(経済的支援)する個人
+                        </div>
+                        <div class="services">
+                            <h4>想定サービス:</h4>
+                            <div class="service-item">
+                                <strong>活動報告の受領:</strong> 年次報告書やニュースレターによる支援成果の可視化
+                            </div>
+                            <div class="service-item">
+                                <strong>イベント招待:</strong> 「くらくサロン」などの活動見学会や感謝祭への招待
+                            </div>
+                            <div class="service-item">
+                                <strong>芳名録への掲載:</strong> Webサイトや配布資料への名前(またはニックネーム)の掲載
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- インフォグラフィックビュー -->
+            <div id="infographic-view" class="view">
+                <h2 class="info-title">3つの会員区分 比較マップ</h2>
+                
+                <div class="comparison-table">
+                    <div class="comparison-card regular">
+                        <div class="card-icon">👔</div>
+                        <div class="card-title">正会員</div>
+                        <div class="card-content">
+                            <div style="margin-bottom: 15px; font-weight: bold;">運営・参画型</div>
+                            <div class="card-item">議決権を持つ社員</div>
+                            <div class="card-item">経営・企画に参画</div>
+                            <div class="card-item">講師・メンター活動</div>
+                            <div class="card-item">運営会議に出席</div>
+                            <div class="card-item">自己実現の場を提供</div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card general">
+                        <div class="card-icon">🤝</div>
+                        <div class="card-title">一般会員</div>
+                        <div class="card-content">
+                            <div style="margin-bottom: 15px; font-weight: bold;">サービス利用・活動型</div>
+                            <div class="card-item">くらくサロン優先参加</div>
+                            <div class="card-item">職業訓練・講座受講</div>
+                            <div class="card-item">就労体験プロジェクト</div>
+                            <div class="card-item">個別カウンセリング</div>
+                            <div class="card-item">活躍の場の紹介</div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-card supporter">
+                        <div class="card-icon">💝</div>
+                        <div class="card-title">賛助会員</div>
+                        <div class="card-content">
+                            <div style="margin-bottom: 15px; font-weight: bold;">支援・スポンサー型</div>
+                            <div class="card-item">経済的支援で貢献</div>
+                            <div class="card-item">活動報告書を受領</div>
+                            <div class="card-item">見学会・感謝祭招待</div>
+                            <div class="card-item">芳名録に掲載</div>
+                            <div class="card-item">支援成果の可視化</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <div class="stats-title">会員タイプ別 特徴サマリー</div>
+                    <div class="stats-grid">
+                        <div class="stat-box regular">
+                            <div class="stat-label">正会員</div>
+                            <div class="stat-value">参画</div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #666;">資金+労力で運営</div>
+                        </div>
+                        <div class="stat-box general">
+                            <div class="stat-label">一般会員</div>
+                            <div class="stat-value">利用</div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #666;">サービス享受</div>
+                        </div>
+                        <div class="stat-box supporter">
+                            <div class="stat-label">賛助会員</div>
+                            <div class="stat-value">支援</div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #666;">経済的サポート</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 比較表ビュー -->
+            <div id="comparison-view" class="view">
+                <h2 class="comparison-view-title">会員区分 詳細比較表</h2>
+                
+                <div class="comparison-table-wrapper">
+                    <div class="comparison-table-grid">
+                        <!-- ヘッダー行 -->
+                        <div class="table-header">
+                            <div class="table-cell category-cell">項目</div>
+                            <div class="table-cell">
+                                <span class="icon-header">👔</span>
+                                正会員
+                            </div>
+                            <div class="table-cell">
+                                <span class="icon-header">🤝</span>
+                                一般会員
+                            </div>
+                            <div class="table-cell">
+                                <span class="icon-header">💝</span>
+                                賛助会員
+                            </div>
+                        </div>
+
+                        <!-- 定義 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">定義・性格</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    資金と労力を提供し、法人の社員として議決権を持つ
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    サービスの提供・利用を主とする個人
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    事業を賛助(経済的支援)する個人
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 会員タイプ -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">会員タイプ</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-highlight">運営・参画型</div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-highlight">サービス利用・活動型</div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-highlight">支援・スポンサー型</div>
+                            </div>
+                        </div>
+
+                        <!-- 議決権 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">議決権</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>あり(社員総会)
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>なし
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>なし
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 経営・運営参画 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">経営・運営参画</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>社員総会での議決権行使</li>
+                                        <li><span class="check-mark">✓</span>事業計画の立案</li>
+                                        <li><span class="check-mark">✓</span>運営会議への出席</li>
+                                        <li><span class="check-mark">✓</span>事業報告の先行閲覧</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>対象外
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>対象外
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 活動・サービス提供 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">活動・サービス提供</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>職業訓練事業の講師</li>
+                                        <li><span class="check-mark">✓</span>交流事業のリーダー</li>
+                                        <li><span class="check-mark">✓</span>メンターとしての活動</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>主に受ける側
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>対象外
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- サービス利用 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">サービス利用</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>利用可能<br>
+                                    <small>(運営側として)</small>
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>くらくサロン優先参加</li>
+                                        <li><span class="check-mark">✓</span>職業訓練・講座受講</li>
+                                        <li><span class="check-mark">✓</span>就労体験プロジェクト</li>
+                                        <li><span class="check-mark">✓</span>個別カウンセリング</li>
+                                        <li><span class="check-mark">✓</span>活躍の場の紹介</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <span class="cross-mark">✗</span>対象外
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- イベント・交流 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">イベント・交流</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>全イベント参加可
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>会員専用コミュニティアクセス
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>活動見学会招待</li>
+                                        <li><span class="check-mark">✓</span>感謝祭への招待</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 情報提供 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">情報提供</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>運営会議情報</li>
+                                        <li><span class="check-mark">✓</span>事業報告先行閲覧</li>
+                                        <li><span class="check-mark">✓</span>限定情報の共有</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>会員向け情報
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <ul class="feature-list">
+                                        <li><span class="check-mark">✓</span>年次報告書受領</li>
+                                        <li><span class="check-mark">✓</span>ニュースレター</li>
+                                        <li><span class="check-mark">✓</span>支援成果の可視化</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 認知・感謝 -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">認知・感謝</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>社員として公式記載
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>会員としての地位
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <span class="check-mark">✓</span>芳名録への掲載<br>
+                                    <small>(Web・配布資料)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- インセンティブ -->
+                        <div class="table-row">
+                            <div class="table-cell category-cell">主なインセンティブ</div>
+                            <div class="table-cell regular-cell">
+                                <div class="cell-content">
+                                    自身の専門性や志を法人の事業として形にできる<strong>「自己実現」の場</strong>
+                                </div>
+                            </div>
+                            <div class="table-cell general-cell">
+                                <div class="cell-content">
+                                    <strong>スキルアップ</strong>と<strong>社会参加</strong>の機会
+                                </div>
+                            </div>
+                            <div class="table-cell supporter-cell">
+                                <div class="cell-content">
+                                    <strong>社会貢献</strong>の実感と活動への<strong>共感</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchView(view) {
+            // ビューの切り替え
+            const sketchView = document.getElementById('sketch-view');
+            const infographicView = document.getElementById('infographic-view');
+            const comparisonView = document.getElementById('comparison-view');
+            const buttons = document.querySelectorAll('.toggle-btn');
+
+            // すべてのビューを非表示
+            sketchView.classList.remove('active');
+            infographicView.classList.remove('active');
+            comparisonView.classList.remove('active');
+            
+            // すべてのボタンを非アクティブ
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 選択されたビューを表示
+            if (view === 'sketch') {
+                sketchView.classList.add('active');
+                buttons[0].classList.add('active');
+            } else if (view === 'infographic') {
+                infographicView.classList.add('active');
+                buttons[1].classList.add('active');
+            } else if (view === 'comparison') {
+                comparisonView.classList.add('active');
+                buttons[2].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
