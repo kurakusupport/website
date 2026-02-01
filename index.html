@@ -340,7 +340,7 @@
             </h1>
         </header>
 
-        <section>
+        <!-- <section>
             <h2 class="section-title"><span class="icon">📢</span> お知らせ</h2>
             <div class="purpose-box" style="text-align: center;">
                 <h3 style="color: var(--secondary-color); font-size: 1.4rem; margin-bottom: 15px;">第2回 くらくサロン 開催！</h3>
@@ -348,7 +348,7 @@
                 <img src="./260131kuraku-salon.jpg" alt="第2回くらくサロン チラシ"
                     style="width: 100%; max-width: 100%; height: auto; border-radius: 10px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             </div>
-        </section>
+        </section> -->
 
         <section>
             <h2 class="section-title">私たちの目的</h2>
@@ -401,7 +401,7 @@
                     <p>知識や経験を共有し合い、仲間とのつながりを作るための活動です。</p>
                 </div>
                 <div class="card">
-                    <span class="icon">🧑‍🍳</span>
+                    <span class="icon">🧑🍳</span>
                     <h3>職業訓練事業</h3>
                     <p>様々な体験を通じて自分の可能性を発見し、活躍の場を広げるためのサポートです。</p>
                 </div>
@@ -440,24 +440,43 @@
 
         <!-- 過去開催のアーカイブ -->
         <section>
-            <div onclick="openModal()" class="past-event-btn">
-                <div class="past-event-preview">
-                    <div class="polaroid">
-                        <img src="./260914.png" alt="チラシ">
+            <h2 class="section-title"><span class="icon">📚</span> 過去の活動アーカイブ</h2>
+            <div class="grid-container">
+                <!-- 第2回 -->
+                <div onclick="openModal('modal-2')" class="past-event-btn"
+                    style="margin-top: 0; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="past-event-preview">
+                        <div class="polaroid">
+                            <img src="./260131kuraku-salon.jpg" alt="チラシ">
+                        </div>
+                        <div class="polaroid">
+                            <img src="./260131kuraku-salon.jpg" alt="チラシ" style="filter: grayscale(80%);">
+                        </div>
                     </div>
-                    <div class="polaroid">
-                        <img src="./2026-09-14.JPG" alt="写真">
-                    </div>
+                    <span>第2回 くらくサロン<br>（2026/1/31）</span>
                 </div>
-                📖 過去の活動：第1回 くらくサロン（2025/9/14）の様子
+
+                <!-- 第1回 -->
+                <div onclick="openModal('modal-1')" class="past-event-btn"
+                    style="margin-top: 0; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <div class="past-event-preview">
+                        <div class="polaroid">
+                            <img src="./260914.png" alt="チラシ">
+                        </div>
+                        <div class="polaroid">
+                            <img src="./2026-09-14.JPG" alt="写真">
+                        </div>
+                    </div>
+                    <span>第1回 くらくサロン<br>（2025/9/14）</span>
+                </div>
             </div>
         </section>
     </div>
 
-    <!-- モーダル本体 -->
-    <div id="modal" class="modal-overlay" onclick="closeModal(event)">
+    <!-- モーダル本体: 第1回 -->
+    <div id="modal-1" class="modal-overlay" onclick="closeModal(event, 'modal-1')">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModalBtn()">&times;</span>
+            <span class="close-btn" onclick="closeModalBtn('modal-1')">&times;</span>
             <h3 style="text-align:center; color:var(--secondary-color); margin-top:0;">第1回 くらくサロン</h3>
             <div class="modal-images">
                 <p><strong>チラシ：</strong></p>
@@ -466,25 +485,43 @@
                 <img src="./2026-09-14.JPG" alt="開催写真">
             </div>
             <div style="text-align:center;">
-                <button onclick="closeModalBtn()"
+                <button onclick="closeModalBtn('modal-1')"
+                    style="padding:10px 20px; background:var(--secondary-color); color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル本体: 第2回 -->
+    <div id="modal-2" class="modal-overlay" onclick="closeModal(event, 'modal-2')">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModalBtn('modal-2')">&times;</span>
+            <h3 style="text-align:center; color:var(--secondary-color); margin-top:0;">第2回 くらくサロン</h3>
+            <div class="modal-images">
+                <p><strong>チラシ：</strong></p>
+                <img src="./260131kuraku-salon.jpg" alt="第2回チラシ">
+                <p><strong>内容：</strong></p>
+                <p>あしびなー広場にて開催しました。<br>多くの皆様にご参加いただき、ありがとうございました。</p>
+            </div>
+            <div style="text-align:center;">
+                <button onclick="closeModalBtn('modal-2')"
                     style="padding:10px 20px; background:var(--secondary-color); color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
             </div>
         </div>
     </div>
 
     <script>
-        function openModal() {
-            document.getElementById('modal').classList.add('active');
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
             document.body.style.overflow = 'hidden'; // 背景スクロール固定
         }
-        function closeModal(e) {
-            if (e.target === document.getElementById('modal')) {
-                document.getElementById('modal').classList.remove('active');
+        function closeModal(e, id) {
+            if (e.target === document.getElementById(id)) {
+                document.getElementById(id).classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
-        function closeModalBtn() {
-            document.getElementById('modal').classList.remove('active');
+        function closeModalBtn(id) {
+            document.getElementById(id).classList.remove('active');
             document.body.style.overflow = '';
         }
     </script>
