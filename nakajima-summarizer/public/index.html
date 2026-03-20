@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中島聡のLife is Beautiful 要約アプリ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            100: '#e0f2fe',
+                            300: '#7dd3fc',
+                            500: '#0ea5e9',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        },
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .skeleton {
+            background: linear-gradient(-45deg, #1e293b, #334155, #1e293b);
+            background-size: 400% 400%;
+            animation: gradient 1.5s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .markdown-body ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden selection:bg-brand-500 selection:text-white">
+    <!-- Background Accents -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-brand-700 blur-[120px] opacity-20 animate-pulse-slow"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-brand-900 blur-[150px] opacity-30"></div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 py-12">
+        <header class="text-center mb-16 animate-slide-up">
+            <h1 class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-300 to-brand-500 mb-4 tracking-tight">
+                中島聡のLife is Beautiful
+            </h1>
+            <p class="text-slate-400 text-lg md:text-xl font-medium">
+                過去1ヶ月の動画アーカイブとAI自動要約リスト
+            </p>
+        </header>
+
+        <section class="flex flex-col items-center justify-center mb-12 animate-slide-up" style="animation-delay: 0.1s;">
+            <div id="error-message" class="hidden w-full max-w-2xl mb-8 p-4 rounded-xl bg-red-900/40 border border-red-500/50 text-red-200 flex items-start space-x-3 shadow-lg">
+                <i data-lucide="alert-triangle" class="w-6 h-6 flex-shrink-0 mt-0.5"></i>
+                <div>
+                    <h3 class="font-bold">エラーが発生しました</h3>
+                    <p id="error-text" class="text-sm opacity-90 mt-1"></p>
+                    <p class="text-xs opacity-75 mt-2">※ GEMINI_API_KEYが.envに設定されているか確認してください。</p>
+                </div>
+            </div>
+
+            <button id="fetch-btn" class="group relative px-8 py-4 bg-brand-500 hover:bg-brand-400 text-white font-bold rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:shadow-[0_0_30px_rgba(14,165,233,0.6)] hover:-translate-y-1 flex items-center space-x-3">
+                <i data-lucide="play-circle" class="w-5 h-5 group-hover:scale-110 transition-transform"></i>
+                <span>動画を取得して要約を開始する</span>
+                <div class="absolute inset-0 rounded-full border-2 border-white/20 scale-100 group-hover:scale-105 transition-transform duration-300 opacity-0 group-hover:opacity-100"></div>
+            </button>
+        </section>
+
+        <!-- Video Grid -->
+        <main id="video-grid" class="grid grid-cols-1 gap-8 opacity-0 transition-opacity duration-700">
+            <!-- Dynamic Content -->
+        </main>
+    </div>
+
+    <!-- Modals or overlays can go here -->
+
+    <script>
+        lucide.createIcons();
+        
+        const fetchBtn = document.getElementById('fetch-btn');
+        const videoGrid = document.getElementById('video-grid');
+        const errorMsg = document.getElementById('error-message');
+        const errorText = document.getElementById('error-text');
+
+        fetchBtn.addEventListener('click', async () => {
+            fetchBtn.disabled = true;
+            fetchBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>動画を取得中...</span>';
+            lucide.createIcons();
+            errorMsg.classList.add('hidden');
+            videoGrid.innerHTML = '';
+            videoGrid.classList.remove('opacity-0');
+
+            try {
+                // Fetch recent videos list
+                const res = await fetch('/api/recent-videos');
+                const data = await res.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || '動画リストの取得に失敗しました');
+                }
+
+                const videos = data.videos;
+                
+                if (videos.length === 0) {
+                    videoGrid.innerHTML = '<div class="text-center text-slate-400 py-12 glass-panel rounded-2xl">過去1ヶ月以内の動画は見つかりませんでした。</div>';
+                    resetButton();
+                    return;
+                }
+
+                // Render video skeleton cards
+                videos.forEach((video, index) => {
+                    const cardData = document.createElement('div');
+                    cardData.className = `glass-panel rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8 items-start animate-slide-up hover:border-brand-500/30 transition-colors duration-300 shadow-xl`;
+                    cardData.style.animationDelay = `${index * 0.1}s`;
+                    cardData.id = `video-${video.id}`;
+                    
+                    const thumbnail = `https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`;
+
+                    cardData.innerHTML = `
+                        <div class="w-full md:w-1/3 flex-shrink-0 group overflow-hidden rounded-xl shadow-lg relative cursor-pointer" onclick="window.open('${video.link}', '_blank')">
+                            <img src="${thumbnail}" alt="${video.title}" class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                <i data-lucide="youtube" class="w-12 h-12 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-2/3 flex flex-col h-full">
+                            <h2 class="text-xl md:text-2xl font-bold text-white mb-2 leading-tight hover:text-brand-300 transition-colors cursor-pointer" onclick="window.open('${video.link}', '_blank')">
+                                ${video.title}
+                            </h2>
+                            <p class="text-sm text-slate-400 mb-6 font-medium">${new Date(video.pubDate).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                            
+                            <div class="summary-container relative flex-grow bg-dark-800/50 rounded-xl p-5 border border-slate-700/50">
+                                <div class="loading-state flex items-center text-brand-400 text-sm font-medium">
+                                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-2"></i>
+                                    AI要約を生成しています...
+                                </div>
+                                <div class="summary-content markdown-body text-slate-300 text-sm md:text-base leading-relaxed hidden"></div>
+                            </div>
+                        </div>
+                    `;
+                    videoGrid.appendChild(cardData);
+                });
+                lucide.createIcons();
+
+                // Start summarizing videos sequentially to avoid rate limits
+                for (const video of videos) {
+                    await fetchAndRenderSummary(video);
+                }
+
+                resetButton();
+            } catch (err) {
+                console.error(err);
+                showError(err.message);
+                resetButton();
+            }
+        });
+
+        async function fetchAndRenderSummary(video) {
+            const cardData = document.getElementById(`video-${video.id}`);
+            const loadingState = cardData.querySelector('.loading-state');
+            const summaryContent = cardData.querySelector('.summary-content');
+
+            try {
+                const res = await fetch('/api/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ videoId: video.id, title: video.title })
+                });
+                const data = await res.json();
+
+                if (!data.success) {
+                    throw new Error(data.error);
+                }
+
+                // Render Markdown simply: handle paragraphs and lists temporarily
+                let formattedScore = data.summary
+                    .replace(/^- (.*$)/gim, '<li>$1</li>')
+                    .replace(/^\* (.*$)/gim, '<li>$1</li>')
+                    .replace(/\n\n/gim, '<br><br>');
+                
+                if (formattedScore.includes('<li>')) {
+                    formattedScore = `<ul>${formattedScore}</ul>`; 
+                    formattedScore = formattedScore.replace(/<br><br><ul>/g, '<ul>').replace(/<\/ul><br><br>/g, '</ul>');
+                }
+
+                loadingState.classList.add('hidden');
+                summaryContent.innerHTML = formattedScore;
+                summaryContent.classList.remove('hidden');
+
+            } catch (err) {
+                loadingState.innerHTML = `<span class="text-red-400 flex items-center"><i data-lucide="x-circle" class="w-4 h-4 mr-1"></i>要約できませんでした: ${err.message}</span>`;
+                lucide.createIcons();
+            }
+        }
+
+        function showError(msg) {
+            errorMsg.classList.remove('hidden');
+            errorText.textContent = msg;
+        }
+
+        function resetButton() {
+            fetchBtn.disabled = false;
+            fetchBtn.innerHTML = '<i data-lucide="rotate-ccw" class="w-5 h-5"></i><span>再度取得する</span>';
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

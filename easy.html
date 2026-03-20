@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>やさしい日本語 | くらくサポート</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --accent-color: #f57c00;
+            --bg-color: #f1f8e9;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: #212121;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+        .lang-switch {
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .lang-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
+            border-bottom: 4px solid var(--primary-color);
+        }
+        h1 { font-size: 1.8rem; color: var(--primary-color); margin: 0; }
+        .section-title { font-size: 1.5rem; border-bottom: 3px solid var(--primary-color); display: inline-block; margin-bottom: 25px; color: var(--primary-color); }
+        .purpose-box { background-color: #fff; border: 3px solid var(--primary-color); padding: 25px; border-radius: 15px; position: relative; margin-top: 20px; }
+        .purpose-box::before { content: "やさしい せつめい"; position: absolute; top: -15px; left: 20px; background: var(--primary-color); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8rem; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: #fff; border: 2px solid #e0e0e0; border-radius: 15px; padding: 25px; text-align: center; }
+        .card .icon { font-size: 3rem; margin-bottom: 15px; }
+        .gov-link-item { background: white; border: 2px solid var(--primary-color); margin-bottom: 10px; padding: 15px 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #212121; font-weight: bold; }
+        footer { text-align: center; padding: 40px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="./index.html">🏢 ほうじん 向けの ページは こちら</a>
+    </div>
+
+    <header>
+        <h1>一般社団法人くらくサポート</h1>
+        <p>（みんなが たすけあう ばしょ）</p>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2 class="section-title">わたしたちの おもい</h2>
+            <div class="purpose-box">
+                <p>
+                    くらくサポートは、<b>たすけが ほしい人</b>や、<b>なにかを 学びたい人</b>、
+                    そして <b>だれかを たすけたい人</b>が あつまる場所です。
+                </p>
+                <p>
+                    みんなが 安心（あんしん）して くらせるように、そして 新しいことに 挑戦（ちょうせん）できるように、
+                    こころを込めて サポートします。
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="section-title">おこなっていること</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <div class="icon">🤝</div>
+                    <h3>なかまづくり</h3>
+                    <p>経験（けいけん）を はなしあったり、友だちを つくったりします。</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🛠️</div>
+                    <h3>しごとの れんしゅう</h3>
+                    <p>いろいろな 体験（たいけん）をして、自分に ぴったりの しごとを みつけます。</p>
+                </div>
+                <div class="card">
+                    <div class="icon">🌳</div>
+                    <h3>社会（しゃかい）に さんか</h3>
+                    <p>地域（ちいき）の人たちと いっしょに、楽しく 活動（かつどう）します。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="governance">
+            <h2 class="section-title">あんしん 運営（うんえい）</h2>
+            <p>わたしたちは、正しい ルールで 運営していることを 公開（こうかい）しています。</p>
+            
+            <a href="./kuraku-teikan-text.html" class="gov-link-item">
+                <span>ほうじんの ルール（定款）</span>
+                <span>▶ 見る</span>
+            </a>
+
+            <a href="./schedule.html" class="gov-link-item">
+                <span>１ねんかんの 予定（よてい）</span>
+                <span>▶ 見る</span>
+            </a>
+        </section>
+    </main>
+
+    <style>
+        /* 共通フッターのスタイル */
+        .site-footer {
+            background-color: #fff;
+            border-top: 2px solid var(--primary-color);
+            padding: 20px 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: #212121;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            background: white;
+        }
+        .copyright {
+            font-size: 0.8rem;
+            color: #999;
+        }
+    </style>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="./index.html">🏠 ほうじん向け</a>
+            <a href="./easy.html">🌸 やさしい版</a>
+            <a href="./schedule.html">📅 よてい</a>
+            <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
+        </nav>
+        <div class="copyright">
+            &copy; 2025 一般社団法人くらくサポート
+        </div>
+    </footer>
+</body>
+</html>

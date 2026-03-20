@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一般社団法人くらくサポート</title>
+    <title>一般社団法人くらくサポート | 公式サイト</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -16,515 +14,174 @@
             --bg-color: #e8f5e9;
             --card-bg: #ffffff;
         }
-
         body {
             font-family: 'M PLUS Rounded 1c', sans-serif;
             background-color: var(--bg-color);
             color: #333;
             margin: 0;
-            padding: 10px;
-            /* スマホ向けに外側の余白を縮小 */
+            padding: 0;
             line-height: 1.6;
-            -webkit-text-size-adjust: 100%;
         }
-
-        .container {
-            max-width: 850px;
-            margin: 10px auto;
-            background-color: var(--card-bg);
-            padding: 20px;
-            /* スマホ向けに内側を調整 */
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.15);
-            border: 2px solid #a5d6a7;
-            box-sizing: border-box;
-        }
-
-        /* ヘッダーセクション */
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .header h1 {
-            display: flex;
-            flex-direction: column;
-            /* スマホでは縦並び */
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            /* iPhone12で1行に収まりやすいサイズ */
-            font-weight: 800;
-            color: var(--primary-color);
-            margin: 0;
-        }
-
-        .header .logo {
-            height: 50px;
-            /* スマホで見やすいサイズに固定 */
-            width: auto;
-        }
-
-        /* 見出し */
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            text-align: center;
-            margin: 35px 0 20px 0;
-            color: var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            word-break: keep-all;
-            /* 変な改行を防ぐ */
-        }
-
-        .section-title .icon {
-            font-size: 1.4em;
-        }
-
-        /* 目的セクション */
-        .purpose-box {
-            background-color: #f1f8e9;
-            border: 2px dashed #81c784;
-            padding: 18px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-        }
-
-        .purpose-box p {
-            font-size: 0.95rem;
-            line-height: 1.7;
-            margin: 0 0 10px 0;
-            text-align: left;
-        }
-
-        .purpose-box .highlight {
-            font-weight: 700;
-            color: #2e7d32;
-            background: linear-gradient(transparent 70%, #c8e6c9 70%);
-            /* 読みやすく強調 */
-        }
-
-        /* カードレイアウト共通 */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            /* スマホは1列 */
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .card {
-            background-color: #fff;
-            border-radius: 15px;
-            padding: 18px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            border-bottom: 5px solid var(--secondary-color);
-            transition: transform 0.2s;
-        }
-
-        .card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-            display: block;
-            text-align: center;
-        }
-
-        .card h3 {
-            font-size: 1.1rem;
-            color: var(--secondary-color);
-            margin: 0 0 10px 0;
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        .card p {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        /* 基本情報セクション */
-        .info-box {
-            background-color: #f3e5f5;
-            border: 2px solid #ba68c8;
-            padding: 15px;
-            border-radius: 15px;
-            margin-top: 30px;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .info-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-item .icon {
-            font-size: 1.4rem;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-
-        .info-item p {
-            margin: 0;
-            font-size: 0.95rem;
-            word-break: break-all;
-        }
-
-        /* タブレット・PC向け調整 */
-        @media (min-width: 600px) {
-            .container {
-                padding: 40px;
-                margin: 30px auto;
-            }
-
-            .header h1 {
-                flex-direction: row;
-                font-size: 2.2rem;
-            }
-
-            .header .logo {
-                height: 60px;
-            }
-
-            .section-title {
-                font-size: 1.8rem;
-            }
-
-            .grid-container {
-                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            }
-
-            .purpose-box {
-                padding: 30px;
-            }
-
-            .purpose-box p {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* モーダル - Phase2追加 */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
+        .lang-switch {
+            background: #fff;
             padding: 10px;
-            /* スマホでの余白確保 */
-            box-sizing: border-box;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-content {
-            background: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            width: 100%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #666;
-            line-height: 1;
-            z-index: 10;
-        }
-
-        .modal-images img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .past-event-btn {
-            display: block;
-            width: 100%;
-            background: #fff;
-            border: 2px dashed #ba68c8;
-            color: #ba68c8;
-            padding: 15px;
-            border-radius: 15px;
             text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .lang-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
             font-weight: bold;
-            cursor: pointer;
-            margin-top: 30px;
-            transition: background 0.2s, transform 0.1s;
-            box-sizing: border-box;
+            border: 2px solid var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
         }
-
-        .past-event-btn:hover {
-            background: #f3e5f5;
-            transform: translateY(-2px);
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-
-        /* ポラロイド風プレビュー - Phase3追加 */
-        .past-event-preview {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-            pointer-events: none;
-            /* クリックは親のdivが受け取る */
-        }
-
-        .polaroid {
-            background: #fff;
-            padding: 8px 8px 25px 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            transform: rotate(-3deg);
-            transition: transform 0.3s;
-            width: 100px;
-            text-align: center;
-        }
-
-        .polaroid:nth-child(2) {
-            transform: rotate(4deg);
-            z-index: 1;
-        }
-
-        .polaroid img {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: grayscale(30%);
-        }
-
-        .past-event-btn:hover .polaroid {
-            transform: rotate(0deg) scale(1.1);
-            z-index: 2;
-        }
-
-        .past-event-btn:hover .polaroid img {
-            filter: grayscale(0%);
-        }
+        h1 { color: var(--primary-color); text-align: center; font-size: 2rem; margin-bottom: 30px; }
+        .section-title { font-size: 1.5rem; color: var(--secondary-color); border-bottom: 3px solid var(--primary-color); display: inline-block; margin: 40px 0 20px 0; }
+        .profile-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .profile-table th, .profile-table td { border: 1px solid #a5d6a7; padding: 15px; text-align: left; }
+        .profile-table th { background-color: #f1f8e9; width: 30%; }
+        .gov-category { margin-top: 25px; font-weight: bold; color: var(--secondary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .gov-item { background: #fff; border: 1px solid #eee; margin: 5px 0; padding: 10px 20px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .gov-item a { color: var(--primary-color); text-decoration: none; font-weight: bold; }
+        .aoi-structure { font-size: 0.85rem; color: #666; margin: 5px 0 15px 15px; line-height: 1.8; }
+        .aoi-structure a { color: #666; text-decoration: none; margin-right: 10px; }
+        .aoi-structure a:hover { color: var(--primary-color); text-decoration: underline; }
+        footer { text-align: center; padding: 40px; color: #666; }
+        @media (max-width: 600px) { .container { padding: 20px; } h1 { font-size: 1.5rem; } .profile-table th, .profile-table td { display: block; width: 100%; } }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>
-                <!-- <img src="./img/f001bc9a-3775-4929-a7ce-d0fcc9496393.png" alt="くらくサポート ロゴ" class="logo"> -->
-                <span>一般社団法人<br>くらくサポート</span>
-            </h1>
-        </header>
+    <div class="lang-switch">
+        <a href="./easy.html">👉 やさしい日本語（にほんご）はこちら</a>
+    </div>
 
-        <!-- <section>
-            <h2 class="section-title"><span class="icon">📢</span> お知らせ</h2>
-            <div class="purpose-box" style="text-align: center;">
-                <h3 style="color: var(--secondary-color); font-size: 1.4rem; margin-bottom: 15px;">第2回 くらくサロン 開催！</h3>
-                <p>2026年1月31日（土）に「第2回 くらくサロン」を実施します。</p>
-                <img src="./260131kuraku-salon.jpg" alt="第2回くらくサロン チラシ"
-                    style="width: 100%; max-width: 100%; height: auto; border-radius: 10px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            </div>
-        </section> -->
+    <main class="container">
+        <h1>一般社団法人くらくサポート</h1>
 
-        <section>
+        <section id="mission">
             <h2 class="section-title">私たちの目的</h2>
-            <div class="purpose-box">
-                <p>この法人は、<span class="highlight">サポートを必要としている人</span>、<span
-                        class="highlight">自分の知識や経験を増やしたい人</span>、または<span class="highlight">提供したい人</span>、<span
-                        class="highlight">自分の活躍の場を探している</span>、または<span class="highlight">活躍したいと思っている人</span>に、</p>
-                <p>生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、<span class="highlight">豊かな生活の実現をサポートすること</span>を目的とします。
-                </p>
-            </div>
+            <p>
+                当法人は、サポートを必要としている人、自分の知識や経験を増やしたい人、または提供したい人、自分の活躍の場を探している、または活躍したいと思っている人に、生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、豊かな生活の実現をサポートすることを目的とします。
+            </p>
         </section>
 
-        <section>
-            <h2 class="section-title"><span class="icon">🤝</span> こんな人たちを応援します！</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <span class="icon">🆘</span>
-                    <h3>サポートを<br>必要としている人</h3>
-                    <p>生活の中で困りごとを抱えていたり、新しい一歩を踏み出したいけれど、どうしたらいいか分からないと感じている方。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">💡</span>
-                    <h3>知識や経験を<br>増やしたい人</h3>
-                    <p>新しいことを学びたい、スキルアップしたい、自分の可能性を広げたいと意欲を持っている方。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">🎁</span>
-                    <h3>知識や経験を<br>提供したい人</h3>
-                    <p>これまでの経験や持っているスキルを活かして、誰かの役に立ちたい、社会に貢献したいと考えている方。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">🌟</span>
-                    <h3>活躍の場を<br>探している人</h3>
-                    <p>自分の力を試したい、新しい場所でチャレンジしたい、社会とのつながりを持ちたいと願っている方。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">🚀</span>
-                    <h3>活躍したいと<br>思っている人</h3>
-                    <p>自分の能力を最大限に発揮し、目標を達成したいと強く願っている方。</p>
-                </div>
-            </div>
+        <section id="profile">
+            <h2 class="section-title">法人概要</h2>
+            <table class="profile-table">
+                <tr><th>名称</th><td>一般社団法人くらくサポート</td></tr>
+                <tr><th>設立</th><td>2025年10月23日</td></tr>
+                <tr><th>代表理事</th><td>赤嶺 睦夫</td></tr>
+                <tr><th>理事</th><td>佐渡山 要、金城 弘明</td></tr>
+                <tr><th>監事</th><td>迎里 崇雅</td></tr>
+                <tr><th>所在地</th><td>〒901-0201 沖縄県豊見城市真玉橋182-1F</td></tr>
+                <tr><th>主な事業</th><td>交流促進事業、職業訓練事業、社会参画の機会創出事業 等</td></tr>
+            </table>
         </section>
 
-        <section>
-            <h2 class="section-title"><span class="icon">🌈</span> 私たちの事業内容</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <span class="icon">🤝</span>
-                    <h3>交流促進事業</h3>
-                    <p>知識や経験を共有し合い、仲間とのつながりを作るための活動です。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">🧑🍳</span>
-                    <h3>職業訓練事業</h3>
-                    <p>様々な体験を通じて自分の可能性を発見し、活躍の場を広げるためのサポートです。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">🌳</span>
-                    <h3>社会参加の機会創出事業</h3>
-                    <p>人と社会との繋がりを深めるための、社会に参加する機会を作ります。</p>
-                </div>
-                <div class="card">
-                    <span class="icon">✨</span>
-                    <h3>その他必要な事業</h3>
-                    <p>上記の目的を達成するために必要な、その他の活動を行います。</p>
-                </div>
+        <section id="governance">
+            <h2 class="section-title">情報公開・ガバナンス</h2>
+            
+            <div class="gov-category">定款</div>
+            <div class="aoi-structure">
+                <a href="./kuraku-teikan-text.html#ch1">第1章 総則</a>
+                <a href="./kuraku-teikan-text.html#ch2">第2章 目的および事業</a>
+                <a href="./kuraku-teikan-text.html#ch3">第3章 会員</a>
+                <a href="./kuraku-teikan-text.html#ch4">第4章 社員総会</a>
+                <a href="./kuraku-teikan-text.html#ch5">第5章 役員</a>
+                <a href="./kuraku-teikan-text.html#ch6">第6章 理事会</a>
+                <a href="./kuraku-teikan-text.html#ch7">第7章 資産および会計</a>
+                <a href="./kuraku-teikan-text.html#ch8">第8章 附則</a>
+            </div>
+            <div class="gov-item">
+                <span>定款（原文内容）</span>
+                <a href="./kuraku-teikan-text.html">表示</a>
+            </div>
+            <div class="gov-item">
+                <span>定款（スライド解説版）</span>
+                <a href="./kuraku-teikan-slides.html">表示</a>
+            </div>
+            <div class="gov-item">
+                <span>定款（インフォグラフィック版）</span>
+                <a href="./kuraku-teikan.html">表示</a>
+            </div>
+
+            <div class="gov-category">運営スケジュール</div>
+            <div class="gov-item">
+                <span>年間運営・行政手続きサイクル</span>
+                <a href="./schedule.html">表示</a>
+            </div>
+
+            <div class="gov-category">2025年度 実績</div>
+            <div class="gov-item">
+                <span>第1回理事会（設立理事会） 2025/10/23 開催</span>
+                <span style="color:#999; font-size:0.8rem;">記録保管済</span>
+            </div>
+
+            <div style="margin-top: 30px; color: #999; font-size: 0.8rem;">
+                ※規程類、事業報告書などは準備ができ次第、順次公開いたします。
             </div>
         </section>
+    </main>
 
-        <section>
-            <div class="info-box">
-                <div class="info-item">
-                    <span class="icon">🏷️</span>
-                    <p><strong>名称：</strong><br>一般社団法人くらくサポート</p>
-                </div>
-                <div class="info-item">
-                    <span class="icon">📍</span>
-                    <p><strong>主たる事務所：</strong><br>沖縄県豊見城市182</p>
-                </div>
-                <div class="info-item">
-                    <span class="icon">📜</span>
-                    <p><strong>定款：</strong><br><a
-                            href="https://docs.google.com/document/d/1z2w7pBlx7k2oE0mUC_vKkMT-8pUWLUoGp3E0MtZrpBM/edit?usp=sharing"
-                            target="_blank" rel="noopener noreferrer" style="color: var(--primary-color);">定款（Google
-                            Docs）</a></p>
-                </div>
-            </div>
-        </section>
+    <style>
+        /* 共通フッターのスタイル */
+        .site-footer {
+            background-color: #fff;
+            border-top: 2px solid var(--primary-color);
+            padding: 20px 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+        .footer-nav a:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .copyright {
+            font-size: 0.8rem;
+            color: #999;
+        }
+    </style>
 
-        <!-- 過去開催のアーカイブ -->
-        <section>
-            <h2 class="section-title"><span class="icon">📚</span> 過去の活動アーカイブ</h2>
-            <div class="grid-container">
-                <!-- 第2回 -->
-                <div onclick="openModal('modal-2')" class="past-event-btn"
-                    style="margin-top: 0; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <div class="past-event-preview">
-                        <div class="polaroid">
-                            <img src="./260131kuraku-salon.jpg" alt="チラシ">
-                        </div>
-                        <div class="polaroid">
-                            <img src="./260131kuraku-salon.jpg" alt="チラシ" style="filter: grayscale(80%);">
-                        </div>
-                    </div>
-                    <span>第2回 くらくサロン<br>（2026/1/31）</span>
-                </div>
-
-                <!-- 第1回 -->
-                <div onclick="openModal('modal-1')" class="past-event-btn"
-                    style="margin-top: 0; min-height: 250px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <div class="past-event-preview">
-                        <div class="polaroid">
-                            <img src="./260914.png" alt="チラシ">
-                        </div>
-                        <div class="polaroid">
-                            <img src="./2026-09-14.JPG" alt="写真">
-                        </div>
-                    </div>
-                    <span>第1回 くらくサロン<br>（2025/9/14）</span>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <!-- モーダル本体: 第1回 -->
-    <div id="modal-1" class="modal-overlay" onclick="closeModal(event, 'modal-1')">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModalBtn('modal-1')">&times;</span>
-            <h3 style="text-align:center; color:var(--secondary-color); margin-top:0;">第1回 くらくサロン</h3>
-            <div class="modal-images">
-                <p><strong>チラシ：</strong></p>
-                <img src="./260914.png" alt="第1回チラシ">
-                <p><strong>開催の様子：</strong></p>
-                <img src="./2026-09-14.JPG" alt="開催写真">
-            </div>
-            <div style="text-align:center;">
-                <button onclick="closeModalBtn('modal-1')"
-                    style="padding:10px 20px; background:var(--secondary-color); color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
-            </div>
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="./index.html"><span>🏠</span> トップ</a>
+            <a href="./easy.html"><span>🌸</span> やさしい日本語</a>
+            <a href="./schedule.html"><span>📅</span> 年間予定</a>
+            <a href="./kuraku-teikan-text.html"><span>⚖️</span> 定款原文</a>
+        </nav>
+        <div class="copyright">
+            &copy; 2025 一般社団法人くらくサポート
         </div>
-    </div>
-
-    <!-- モーダル本体: 第2回 -->
-    <div id="modal-2" class="modal-overlay" onclick="closeModal(event, 'modal-2')">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModalBtn('modal-2')">&times;</span>
-            <h3 style="text-align:center; color:var(--secondary-color); margin-top:0;">第2回 くらくサロン</h3>
-            <div class="modal-images">
-                <p><strong>チラシ：</strong></p>
-                <img src="./260131kuraku-salon.jpg" alt="第2回チラシ">
-                <p><strong>内容：</strong></p>
-                <p>あしびなー広場にて開催しました。<br>多くの皆様にご参加いただき、ありがとうございました。</p>
-            </div>
-            <div style="text-align:center;">
-                <button onclick="closeModalBtn('modal-2')"
-                    style="padding:10px 20px; background:var(--secondary-color); color:white; border:none; border-radius:5px; cursor:pointer;">閉じる</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-            document.body.style.overflow = 'hidden'; // 背景スクロール固定
-        }
-        function closeModal(e, id) {
-            if (e.target === document.getElementById(id)) {
-                document.getElementById(id).classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-        function closeModalBtn(id) {
-            document.getElementById(id).classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    </script>
+    </footer>
 </body>
-
 </html>
