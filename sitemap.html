@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>サイトマップ | 一般社団法人くらくサポート</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --bg-color: #f1f8e9;
+            --card-bg: #ffffff;
+            --border-color: #a5d6a7;
+        }
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: #212121;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
+            border-bottom: 4px solid var(--primary-color);
+        }
+        h1 { font-size: 1.8rem; color: var(--primary-color); margin: 0; }
+        
+        .map-section {
+            margin-bottom: 40px;
+        }
+        .map-category {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: #4e342e;
+            border-left: 6px solid var(--primary-color);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .map-item {
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.2s;
+            display: block;
+        }
+        .map-item:hover {
+            border-color: var(--primary-color);
+            background-color: #f1f8e9;
+            transform: translateY(-2px);
+        }
+        .map-item strong {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        .map-item span {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .site-footer {
+            background-color: #fff;
+            border-top: 4px solid var(--primary-color);
+            padding: 30px 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9rem;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>サイトマップ</h1>
+        <p>（サイトの 地図）</p>
+    </header>
+
+    <main class="container">
+        <!-- メインページ -->
+        <div class="map-section">
+            <h2 class="map-category">トップページ</h2>
+            <div class="map-grid">
+                <a href="./index.html" class="map-item">
+                    <strong>🏠 公式サイト（標準版）</strong>
+                    <span>法人概要、情報公開、最新の活動報告などを掲載しています。</span>
+                </a>
+                <a href="./easy.html" class="map-item">
+                    <strong>🌸 やさしい日本語版</strong>
+                    <span>だれにでも 分かりやすい 言葉で 活動を しょうかいしています。</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 定款・ルール -->
+        <div class="map-section">
+            <h2 class="map-category">定款（ほうじんの ルール）</h2>
+            <div class="map-grid">
+                <a href="./kuraku-teikan-text.html" class="map-item">
+                    <strong>⚖️ 定款 原文</strong>
+                    <span>全ての条文をテキスト形式で公開しています（住所は非表示）。</span>
+                </a>
+                <a href="./kuraku-teikan-slides.html" class="map-item">
+                    <strong>📊 定款 スライド解説版</strong>
+                    <span>大事なポイントをプレゼンテーション形式で分かりやすく見られます。</span>
+                </a>
+                <a href="./kuraku-teikan.html" class="map-item">
+                    <strong>🎨 定款 インフォグラフィック</strong>
+                    <span>図解で直感的にルールの全体像を理解できます。</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- スケジュール -->
+        <div class="map-section">
+            <h2 class="map-category">運営予定</h2>
+            <div class="map-grid">
+                <a href="./schedule.html" class="map-item">
+                    <strong>📅 年間運営スケジュール</strong>
+                    <span>理事会や行政手続きなど、法人の年間サイクルを掲載しています。</span>
+                </a>
+                <a href="./schedule-easy.html" class="map-item">
+                    <strong>📅 １ねんかんの 予定</strong>
+                    <span>１ねんの ながれを やさしい 言葉で しょうかいしています。</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="./index.html">🏠 トップ</a>
+            <a href="./easy.html">🌸 やさしい版</a>
+            <a href="./schedule.html">📅 予定</a>
+            <a href="./sitemap.html">🗺️ サイトマップ</a>
+        </nav>
+        <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>
+    </footer>
+</body>
+</html>
