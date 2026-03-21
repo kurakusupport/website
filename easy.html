@@ -21,43 +21,56 @@
             margin: 0;
             padding: 0;
             line-height: 1.8;
-            letter-spacing: 0.05em;
+            -webkit-text-size-adjust: 100%;
         }
         .lang-switch {
             background: #fff;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .lang-switch a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
             border: 2px solid var(--primary-color);
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            display: inline-block;
         }
         .container {
             max-width: 850px;
             margin: 0 auto;
             background-color: var(--card-bg);
-            padding: 20px;
+            padding: 15px;
+            box-sizing: border-box;
         }
         header {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 15px;
             background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
             border-bottom: 4px solid var(--primary-color);
         }
-        h1 { font-size: 1.8rem; color: var(--primary-color); margin: 0; }
-        .section-title { font-size: 1.5rem; border-bottom: 3px solid var(--primary-color); display: inline-block; margin-bottom: 25px; color: var(--primary-color); }
-        .purpose-box { background-color: #fff; border: 3px solid var(--primary-color); padding: 25px; border-radius: 15px; position: relative; margin-top: 20px; }
-        .purpose-box::before { content: "やさしい せつめい"; position: absolute; top: -15px; left: 20px; background: var(--primary-color); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.8rem; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .card { background: #fff; border: 2px solid #e0e0e0; border-radius: 15px; padding: 25px; text-align: center; }
-        .card .icon { font-size: 3rem; margin-bottom: 15px; }
-        .gov-link-item { background: white; border: 2px solid var(--primary-color); margin-bottom: 10px; padding: 15px 20px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #212121; font-weight: bold; }
-        footer { text-align: center; padding: 40px; color: #666; }
+        h1 { font-size: 1.6rem; color: var(--primary-color); margin: 0; line-height: 1.3; }
+        .section-title { font-size: 1.4rem; border-bottom: 3px solid var(--primary-color); display: inline-block; margin: 25px 0 15px 0; color: var(--primary-color); }
+        .purpose-box { background-color: #fff; border: 3px solid var(--primary-color); padding: 20px; border-radius: 15px; position: relative; margin-top: 20px; font-size: 1rem; }
+        .purpose-box::before { content: "やさしい せつめい"; position: absolute; top: -15px; left: 15px; background: var(--primary-color); color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; }
+        
+        .grid-container { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .card { background: #fff; border: 2px solid #e0e0e0; border-radius: 15px; padding: 20px; text-align: center; }
+        .card .icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.2rem; color: var(--primary-color); }
+        
+        .gov-link-item { background: white; border: 2px solid var(--primary-color); margin-bottom: 10px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; color: #212121; font-weight: bold; font-size: 1rem; }
+        .gov-link-item span:last-child { color: var(--primary-color); }
+
+        .site-footer { background-color: #fff; border-top: 4px solid var(--primary-color); padding: 30px 10px; margin-top: 40px; text-align: center; }
+        .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .footer-nav a { text-decoration: none; color: #212121; font-weight: bold; font-size: 0.85rem; padding: 10px 12px; border: 2px solid var(--primary-color); border-radius: 25px; min-width: 80px; }
     </style>
 </head>
 <body>
@@ -66,8 +79,8 @@
     </div>
 
     <header>
-        <h1>一般社団法人くらくサポート</h1>
-        <p>（みんなが たすけあう ばしょ）</p>
+        <h1>一般社団法人<br>くらくサポート</h1>
+        <p style="font-size: 0.9rem; margin-top: 5px;">（みんなが たすけあう ばしょ）</p>
     </header>
 
     <main class="container">
@@ -79,8 +92,7 @@
                     そして <b>だれかを たすけたい人</b>が あつまる場所です。
                 </p>
                 <p>
-                    みんなが 安心（あんしん）して くらせるように、そして 新しいことに 挑戦（ちょうせん）できるように、
-                    こころを込めて サポートします。
+                    みんなが 安心（あんしん）して くらせるように、サポートします。
                 </p>
             </div>
         </section>
@@ -91,82 +103,42 @@
                 <div class="card">
                     <div class="icon">🤝</div>
                     <h3>なかまづくり</h3>
-                    <p>経験（けいけん）を はなしあったり、友だちを つくったりします。</p>
+                    <p>友だちを つくったり、はなしあったりします。</p>
                 </div>
                 <div class="card">
                     <div class="icon">🛠️</div>
                     <h3>しごとの れんしゅう</h3>
-                    <p>いろいろな 体験（たいけん）をして、自分に ぴったりの しごとを みつけます。</p>
+                    <p>自分に ぴったりの しごとを みつけます。</p>
                 </div>
                 <div class="card">
                     <div class="icon">🌳</div>
-                    <h3>社会（しゃかい）に さんか</h3>
-                    <p>地域（ちいき）の人たちと いっしょに、楽しく 活動（かつどう）します。</p>
+                    <h3>社会に さんか</h3>
+                    <p>地域（ちいき）で 楽しく 活動（かつどう）します。</p>
                 </div>
             </div>
         </section>
 
         <section id="governance">
-            <h2 class="section-title">あんしん 運営（うんえい）</h2>
-            <p>わたしたちは、正しい ルールで 運営していることを 公開（こうかい）しています。</p>
-            
+            <h2 class="section-title">あんしん 運営</h2>
             <a href="./kuraku-teikan-text.html" class="gov-link-item">
-                <span>ほうじんの ルール（定款）</span>
+                <span>ほうじんの ルール</span>
                 <span>▶ 見る</span>
             </a>
-
             <a href="./schedule-easy.html" class="gov-link-item">
-                <span>１ねんかんの 予定（よてい）</span>
+                <span>１ねんかんの 予定</span>
                 <span>▶ 見る</span>
             </a>
         </section>
     </main>
 
-    <style>
-        /* 共通フッターのスタイル */
-        .site-footer {
-            background-color: #fff;
-            border-top: 2px solid var(--primary-color);
-            padding: 20px 10px;
-            margin-top: 50px;
-            text-align: center;
-        }
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .footer-nav a {
-            text-decoration: none;
-            color: #212121;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-            border: 2px solid var(--primary-color);
-            border-radius: 25px;
-            background: white;
-        }
-        .copyright {
-            font-size: 0.8rem;
-            color: #999;
-        }
-    </style>
-
     <footer class="site-footer">
         <nav class="footer-nav">
             <a href="./index.html">🏠 ほうじん向け</a>
             <a href="./easy.html">🌸 やさしい版</a>
-            <a href="./schedule.html">📅 よてい</a>
+            <a href="./schedule-easy.html">📅 予定</a>
             <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
         </nav>
-        <div class="copyright">
-            &copy; 2025 一般社団法人くらくサポート
-        </div>
+        <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>
     </footer>
 </body>
 </html>

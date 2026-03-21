@@ -21,35 +21,41 @@
             margin: 0;
             padding: 0;
             line-height: 1.8;
+            -webkit-text-size-adjust: 100%;
         }
         .lang-switch {
             background: #fff;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .lang-switch a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
             border: 2px solid var(--primary-color);
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            display: inline-block;
         }
         .container {
             max-width: 850px;
-            margin: 20px auto;
+            margin: 0 auto;
             background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
+            padding: 15px;
+            box-sizing: border-box;
         }
         header {
             text-align: center;
-            padding: 30px;
+            padding: 30px 15px;
             background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
             border-bottom: 4px solid var(--primary-color);
         }
-        h1 { font-size: 1.8rem; color: var(--primary-color); margin: 0; }
+        h1 { font-size: 1.6rem; color: var(--primary-color); margin: 0; line-height: 1.3; }
         .schedule-card {
             background: #fff;
             border: 2px solid var(--border-color);
@@ -60,16 +66,17 @@
         .month-label {
             background: var(--primary-color);
             color: white;
-            padding: 10px 20px;
-            font-size: 1.4rem;
+            padding: 12px 20px;
+            font-size: 1.3rem;
             font-weight: 800;
         }
         .content {
-            padding: 20px;
+            padding: 15px 20px;
+            font-size: 1rem;
         }
         .item {
-            margin-bottom: 15px;
-            padding-left: 30px;
+            margin-bottom: 12px;
+            padding-left: 25px;
             position: relative;
         }
         .item::before {
@@ -78,46 +85,19 @@
             left: 0;
             color: var(--primary-color);
         }
-        .important {
-            color: #d32f2f;
-            font-weight: bold;
-        }
-        .site-footer {
-            background-color: #fff;
-            border-top: 4px solid var(--primary-color);
-            padding: 30px 10px;
-            margin-top: 50px;
-            text-align: center;
-        }
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .footer-nav a {
-            text-decoration: none;
-            color: #212121;
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-            border: 2px solid var(--primary-color);
-            border-radius: 25px;
-        }
+        .site-footer { background-color: #fff; border-top: 4px solid var(--primary-color); padding: 30px 10px; margin-top: 40px; text-align: center; }
+        .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .footer-nav a { text-decoration: none; color: #212121; font-weight: bold; font-size: 0.85rem; padding: 10px 12px; border: 2px solid var(--primary-color); border-radius: 25px; }
     </style>
 </head>
 <body>
     <div class="lang-switch">
-        <a href="./schedule.html">🏢 ほうじん向けの ページは こちら</a>
+        <a href="./schedule.html">🏢 ほうじん向け は こちら</a>
     </div>
 
     <header>
-        <h1>１ねんかんの 予定（よてい）</h1>
-        <p>（いつ、なにを するかの カレンダー）</p>
+        <h1>１ねんかんの 予定</h1>
+        <p style="font-size: 0.9rem;">（いつ、なにを するかの カレンダー）</p>
     </header>
 
     <main class="container">
@@ -125,31 +105,31 @@
             <div class="month-label">7月 〜 8月</div>
             <div class="content">
                 <div class="item">新しい １ねんかんが はじまります。</div>
-                <div class="item">前の年の 活動（かつどう）や おかねの 報告（ほうこく）を まとめます。</div>
+                <div class="item">前の年の ほうこくを まとめます。</div>
             </div>
         </div>
 
         <div class="schedule-card">
             <div class="month-label">9月</div>
             <div class="content">
-                <div class="item"><b>「ていじ しゃいん そうかい」</b>を ひらきます。</div>
-                <div class="item important">２ねんに １回、リーダーを えらびなおします。</div>
+                <div class="item">だいじな 会議（そうかい）を ひらきます。</div>
+                <div class="item">２ねんに １回、リーダーを えらびなおします。</div>
             </div>
         </div>
 
         <div class="schedule-card">
             <div class="month-label">10月 〜 1月</div>
             <div class="content">
-                <div class="item">地域（ちいき）のみんなと プロジェクトを 進めます。</div>
-                <div class="item">会議（かいぎ）を ひらいて、活動の すすみぐあいを はなします。</div>
+                <div class="item">地域のみんなと いっしょに 活動します。</div>
+                <div class="item">会議を ひらいて、お話をします。</div>
             </div>
         </div>
 
         <div class="schedule-card">
             <div class="month-label">2月 〜 5月</div>
             <div class="content">
-                <div class="item">次の年の 準備（じゅんび）を はじめます。</div>
-                <div class="item">次の年の 計画（けいかく）や おかねの 予算（よさん）を 決めます。</div>
+                <div class="item">次の年の じゅんびを はじめます。</div>
+                <div class="item">次の年の 計画（けいかく）を 決めます。</div>
             </div>
         </div>
 
@@ -157,16 +137,16 @@
             <div class="month-label" style="background: #f57f17;">6月</div>
             <div class="content">
                 <div class="item">１ねんかんの さいごの月です。</div>
-                <div class="item">次の年の 計画を さいごに 確認（かくにん）します。</div>
+                <div class="item">次の年の 予定を さいごに 確認します。</div>
             </div>
         </div>
     </main>
 
     <footer class="site-footer">
         <nav class="footer-nav">
-            <a href="./index.html">🏠 ほうじん向け</a>
+            <a href="./index.html">🏠 トップ</a>
             <a href="./easy.html">🌸 やさしい版</a>
-            <a href="./schedule-easy.html">📅 よてい</a>
+            <a href="./schedule-easy.html">📅 予定</a>
             <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
         </nav>
         <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>

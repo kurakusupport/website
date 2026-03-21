@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>年間運営・行政手続きスケジュール | 一般社団法人くらくサポート</title>
+    <title>年間運営スケジュール | 一般社団法人くらくサポート</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
@@ -23,43 +23,51 @@
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            -webkit-text-size-adjust: 100%;
         }
         .lang-switch {
             background: #fff;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             border-bottom: 1px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .lang-switch a {
             color: var(--primary-color);
             text-decoration: none;
             font-weight: bold;
+            font-size: 0.9rem;
             border: 2px solid var(--primary-color);
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 8px 15px;
+            border-radius: 25px;
+            display: inline-block;
         }
         .container {
             max-width: 1000px;
-            margin: 20px auto;
+            margin: 15px auto;
             background-color: var(--card-bg);
-            padding: 40px;
+            padding: 20px 15px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-sizing: border-box;
         }
-        h1 { color: var(--primary-color); text-align: center; font-size: 1.8rem; margin-bottom: 30px; }
+        h1 { color: var(--primary-color); text-align: center; font-size: 1.5rem; margin-bottom: 20px; line-height: 1.3; }
         
+        /* iPhone対応スケジュール表：レスポンシブ設計 */
         .schedule-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 10px;
             background: white;
-            font-size: 0.9rem;
         }
         .schedule-table th, .schedule-table td {
             border: 1px solid var(--border-color);
-            padding: 15px;
+            padding: 12px 10px;
             text-align: left;
             vertical-align: top;
+            font-size: 0.9rem;
         }
         .schedule-table th {
             background-color: #f1f8e9;
@@ -67,153 +75,84 @@
             text-align: center;
             font-weight: 800;
         }
-        .month-col {
-            width: 15%;
-            text-align: center !important;
-            font-weight: bold;
-            background-color: #fafdfa;
+        .month-col { width: 15%; font-weight: bold; background-color: #fafdfa; text-align: center !important; }
+        .governance-col { width: 40%; background-color: #fffde7; }
+
+        @media (max-width: 600px) {
+            .schedule-table, .schedule-table thead, .schedule-table tbody, .schedule-table th, .schedule-table td, .schedule-table tr {
+                display: block;
+            }
+            .schedule-table thead { display: none; }
+            .schedule-table tr { margin-bottom: 20px; border: 2px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+            .schedule-table td { border: none; padding: 12px 15px; position: relative; }
+            .month-col { background-color: var(--primary-color); color: white !important; font-size: 1.2rem; text-align: left !important; }
+            .activity-col::before { content: "【活動内容】"; display: block; font-weight: bold; color: var(--primary-color); font-size: 0.8rem; margin-bottom: 5px; }
+            .governance-col::before { content: "【重要・決議】"; display: block; font-weight: bold; color: #f57f17; font-size: 0.8rem; margin-bottom: 5px; }
+            .governance-col { background-color: #fffde7; border-top: 1px dashed #ddd; }
         }
-        .governance-col {
-            width: 40%;
-            background-color: #fffde7;
-        }
-        .tag {
-            display: inline-block;
-            font-size: 0.75rem;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            color: white;
-            font-weight: bold;
-        }
+
+        .tag { display: inline-block; font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; margin-bottom: 4px; color: white; font-weight: bold; }
         .tag-gov { background: var(--primary-color); }
-        .tag-admin { background: var(--admin-color); }
+        .tag-admin { background: #1e88e5; }
         .tag-biennial { background: #e53935; }
 
-        .note-box {
-            margin-top: 40px;
-            padding: 20px;
-            background: #f1f8e9;
-            border-radius: 10px;
-            font-size: 0.85rem;
-        }
-        .site-footer {
-            background-color: #fff;
-            border-top: 2px solid var(--primary-color);
-            padding: 30px 10px;
-            margin-top: 50px;
-            text-align: center;
-        }
-        .footer-nav {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .footer-nav a {
-            text-decoration: none;
-            color: var(--secondary-color);
-            font-weight: bold;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 15px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-        }
-        @media (max-width: 600px) { .schedule-table { font-size: 0.8rem; } }
+        .site-footer { background-color: #fff; border-top: 2px solid var(--primary-color); padding: 30px 10px; margin-top: 50px; text-align: center; }
+        .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .footer-nav a { text-decoration: none; color: var(--secondary-color); font-weight: bold; font-size: 0.85rem; padding: 10px 12px; border: 1px solid #ddd; border-radius: 25px; }
     </style>
 </head>
 <body>
     <div class="lang-switch">
-        <a href="./schedule-easy.html">👉 やさしい日本語（にほんご）はこちら</a>
+        <a href="./schedule-easy.html">👉 やさしい日本語 は こちら</a>
     </div>
 
     <main class="container">
-        <h1>年間運営・行政手続きスケジュール</h1>
-        <p style="text-align: center;">事業年度：7月1日 〜 翌年6月30日（定款第24条）</p>
+        <h1>年間運営スケジュール</h1>
+        <p style="text-align: center; font-size: 0.85rem; margin-bottom: 20px;">事業年度：7月1日 〜 翌年6月30日</p>
 
         <table class="schedule-table">
             <thead>
-                <tr>
-                    <th>月</th>
-                    <th>事業・運営活動</th>
-                    <th>ガバナンス・行政手続き</th>
-                </tr>
+                <tr><th>月</th><th>運営活動</th><th>ガバナンス</th></tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="month-col">7月 〜 8月</td>
-                    <td>
-                        ・新事業年度 開始<br>
-                        ・前年度 決算作業・会計監査
-                    </td>
-                    <td class="governance-col">
-                        <span class="tag tag-gov">理事会</span> 第1回理事会<br>
-                        （決算報告・監事監査報告の承認）
-                    </td>
+                    <td class="activity-col">新年度開始、前年度決算作業</td>
+                    <td class="governance-col"><span class="tag tag-gov">理事会</span> 第1回理事会（決算承認）</td>
                 </tr>
                 <tr>
                     <td class="month-col">9月</td>
-                    <td>
-                        ・前年度 事業報告書の作成・提出
-                    </td>
+                    <td class="activity-col">事業報告書の作成</td>
                     <td class="governance-col">
-                        <span class="tag tag-gov">社員総会</span> <b>定時社員総会</b><br>
-                        <span class="tag tag-biennial">2年に1回</span> <b>役員改選（選任）</b><br>
-                        <span class="tag tag-admin">登記</span> <b>変更登記申請（法務局）</b>
+                        <span class="tag tag-gov">社員総会</span> 定時社員総会<br>
+                        <span class="tag tag-biennial">2年に1回</span> 役員改選・登記
                     </td>
                 </tr>
                 <tr>
                     <td class="month-col">10月 〜 1月</td>
-                    <td>
-                        ・地域連携プロジェクト推進<br>
-                        ・第2四半期・第3四半期 事業
-                    </td>
-                    <td class="governance-col">
-                        <span class="tag tag-gov">理事会</span> 第2回・第3回理事会<br>
-                        （中間報告・次年度方針の検討）
-                    </td>
+                    <td class="activity-col">地域連携プロジェクト推進</td>
+                    <td class="governance-col"><span class="tag tag-gov">理事会</span> 第2・3回理事会</td>
                 </tr>
                 <tr>
                     <td class="month-col">2月 〜 5月</td>
-                    <td>
-                        ・次年度 助成金・公募事業 申請準備<br>
-                        ・次年度 事業計画・収支予算の策定
-                    </td>
-                    <td class="governance-col">
-                        <span class="tag tag-gov">理事会</span> 第4回理事会<br>
-                        （次年度計画・予算案の審議）
-                    </td>
+                    <td class="activity-col">次年度予算・計画策定</td>
+                    <td class="governance-col"><span class="tag tag-gov">理事会</span> 第4回理事会（予算審議）</td>
                 </tr>
                 <tr>
                     <td class="month-col">6月</td>
-                    <td>
-                        ・事業年度末 棚卸・資産確認<br>
-                        ・決算準備
-                    </td>
-                    <td class="governance-col">
-                        <span class="tag tag-gov">決議</span> <b>次年度事業計画・予算の確定</b>
-                    </td>
+                    <td class="activity-col">事業年度末 棚卸・決算準備</td>
+                    <td class="governance-col"><span class="tag tag-gov">決議</span> 次年度予算の確定</td>
                 </tr>
             </tbody>
         </table>
-
-        <div class="note-box">
-            <strong>【注記事項】</strong><br>
-            ・理事会：定款第23条に基づき、3ヶ月に1回以上の頻度で開催。<br>
-            ・役員任期：定款第20条に基づき2年。改選時は重任登記が必要。
-        </div>
     </main>
 
     <footer class="site-footer">
         <nav class="footer-nav">
             <a href="./index.html">🏠 トップ</a>
-            <a href="./easy.html">🌸 やさしい日本語</a>
-            <a href="./schedule.html">📅 年間予定</a>
-            <a href="./kuraku-teikan-text.html">⚖️ 定款原文</a>
+            <a href="./easy.html">🌸 やさしい版</a>
+            <a href="./schedule.html">📅 予定</a>
+            <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
         </nav>
         <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>
     </footer>
