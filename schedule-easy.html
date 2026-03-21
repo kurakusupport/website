@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>１ねんかんの 予定 | くらくサポート</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --bg-color: #f1f8e9;
+            --card-bg: #ffffff;
+            --border-color: #a5d6a7;
+        }
+        body {
+            font-family: 'M PLUS Rounded 1c', sans-serif;
+            background-color: var(--bg-color);
+            color: #212121;
+            margin: 0;
+            padding: 0;
+            line-height: 1.8;
+        }
+        .lang-switch {
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        .lang-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+        .container {
+            max-width: 850px;
+            margin: 20px auto;
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
+            border-bottom: 4px solid var(--primary-color);
+        }
+        h1 { font-size: 1.8rem; color: var(--primary-color); margin: 0; }
+        .schedule-card {
+            background: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .month-label {
+            background: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+        .content {
+            padding: 20px;
+        }
+        .item {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+        }
+        .item::before {
+            content: "●";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+        .important {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .site-footer {
+            background-color: #fff;
+            border-top: 4px solid var(--primary-color);
+            padding: 30px 10px;
+            margin-top: 50px;
+            text-align: center;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .footer-nav a {
+            text-decoration: none;
+            color: #212121;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <a href="./schedule.html">🏢 ほうじん向けの ページは こちら</a>
+    </div>
+
+    <header>
+        <h1>１ねんかんの 予定（よてい）</h1>
+        <p>（いつ、なにを するかの カレンダー）</p>
+    </header>
+
+    <main class="container">
+        <div class="schedule-card">
+            <div class="month-label">7月 〜 8月</div>
+            <div class="content">
+                <div class="item">新しい １ねんかんが はじまります。</div>
+                <div class="item">前の年の 活動（かつどう）や おかねの 報告（ほうこく）を まとめます。</div>
+            </div>
+        </div>
+
+        <div class="schedule-card">
+            <div class="month-label">9月</div>
+            <div class="content">
+                <div class="item"><b>「ていじ しゃいん そうかい」</b>を ひらきます。</div>
+                <div class="item important">２ねんに １回、リーダーを えらびなおします。</div>
+            </div>
+        </div>
+
+        <div class="schedule-card">
+            <div class="month-label">10月 〜 1月</div>
+            <div class="content">
+                <div class="item">地域（ちいき）のみんなと プロジェクトを 進めます。</div>
+                <div class="item">会議（かいぎ）を ひらいて、活動の すすみぐあいを はなします。</div>
+            </div>
+        </div>
+
+        <div class="schedule-card">
+            <div class="month-label">2月 〜 5月</div>
+            <div class="content">
+                <div class="item">次の年の 準備（じゅんび）を はじめます。</div>
+                <div class="item">次の年の 計画（けいかく）や おかねの 予算（よさん）を 決めます。</div>
+            </div>
+        </div>
+
+        <div class="schedule-card" style="border-color: #f57f17;">
+            <div class="month-label" style="background: #f57f17;">6月</div>
+            <div class="content">
+                <div class="item">１ねんかんの さいごの月です。</div>
+                <div class="item">次の年の 計画を さいごに 確認（かくにん）します。</div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="./index.html">🏠 ほうじん向け</a>
+            <a href="./easy.html">🌸 やさしい版</a>
+            <a href="./schedule-easy.html">📅 よてい</a>
+            <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
+        </nav>
+        <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>
+    </footer>
+</body>
+</html>
