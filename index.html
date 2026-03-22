@@ -48,35 +48,54 @@
             background-color: var(--card-bg);
             padding: 25px 15px;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.1);
             box-sizing: border-box;
         }
-        h1 { color: var(--primary-color); text-align: center; font-size: 1.5rem; margin-bottom: 25px; line-height: 1.3; }
-        .section-title { font-size: 1.2rem; color: var(--secondary-color); border-bottom: 3px solid var(--primary-color); display: inline-block; margin: 30px 0 15px 0; }
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #a5d6a7 0%, #e8f5e9 100%);
+            border-bottom: 4px solid var(--primary-color);
+        }
+        h1 { color: var(--primary-color); text-align: center; font-size: 1.6rem; margin: 0; line-height: 1.3; }
+        .section-title { font-size: 1.3rem; color: var(--secondary-color); border-bottom: 3px solid var(--primary-color); display: inline-block; margin: 40px 0 20px 0; }
         
-        /* iPhone SE/12対応テーブル */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .card:hover { border-color: var(--primary-color); transform: translateY(-3px); }
+        .card .icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: var(--secondary-color); line-height: 1.4; }
+        .card p { font-size: 0.9rem; text-align: left; margin: 0; }
+
         .profile-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .profile-table th, .profile-table td { border: 1px solid #a5d6a7; padding: 12px; text-align: left; font-size: 0.95rem; }
         .profile-table th { background-color: #f1f8e9; width: 30%; }
 
         @media (max-width: 480px) {
-            .profile-table th, .profile-table td { display: block; width: 100%; box-sizing: border-box; }
+            .profile-table th, .profile-table td { display: block; width: 100%; }
             .profile-table th { border-bottom: none; padding-bottom: 5px; font-size: 0.85rem; color: var(--primary-color); }
             .profile-table td { padding-top: 0; font-weight: bold; }
         }
 
         .gov-category { margin-top: 25px; font-weight: bold; color: var(--secondary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; font-size: 1.1rem; }
-        .gov-item { background: #fff; border: 1px solid #eee; margin: 8px 0; padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .gov-item span { font-size: 0.95rem; line-height: 1.3; }
-        .gov-item a { color: var(--primary-color); text-decoration: none; font-weight: bold; border: 1px solid var(--primary-color); padding: 5px 12px; border-radius: 15px; flex-shrink: 0; font-size: 0.85rem; }
+        .gov-item { background: #fff; border: 1px solid #eee; margin: 8px 0; padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .gov-item a { color: var(--primary-color); text-decoration: none; font-weight: bold; border: 1px solid var(--primary-color); padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; }
         
-        .aoi-structure { font-size: 0.8rem; color: #666; margin: 10px 0 15px 15px; line-height: 2; }
-        .aoi-structure a { color: #666; text-decoration: none; border: 1px solid #ddd; padding: 2px 8px; border-radius: 5px; display: inline-block; margin-bottom: 5px; }
-        
-        .site-footer { background-color: #fff; border-top: 2px solid var(--primary-color); padding: 30px 10px; margin-top: 50px; text-align: center; }
+        .site-footer { background-color: #fff; border-top: 4px solid var(--primary-color); padding: 30px 10px; margin-top: 50px; text-align: center; }
         .footer-nav { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
-        .footer-nav a { text-decoration: none; color: var(--secondary-color); font-weight: bold; font-size: 0.9rem; padding: 10px 15px; border: 1px solid #ddd; border-radius: 25px; min-width: 100px; }
-        
+        .footer-nav a { text-decoration: none; color: var(--secondary-color); font-weight: bold; font-size: 0.9rem; padding: 10px 15px; border: 1px solid #ddd; border-radius: 25px; }
         footer { text-align: center; padding: 20px; color: #999; font-size: 0.8rem; }
     </style>
 </head>
@@ -85,16 +104,79 @@
         <a href="./easy.html">🌸 やさしい日本語 は こちら</a>
     </div>
 
-    <main class="container">
+    <header>
         <h1>一般社団法人<br>くらくサポート</h1>
+    </header>
 
+    <main class="container">
+        <!-- 私たちの目的 -->
         <section id="mission">
             <h2 class="section-title">私たちの目的</h2>
-            <p style="font-size: 0.95rem;">
-                当法人は、サポートを必要としている人、学びたい人、助けたい人に、生活の質向上を目指す幅広い支援と、新たな挑戦を支えることを目的とします。
+            <p style="font-size: 1rem;">
+                当法人は、サポートを必要としている人、自分の知識や経験を増やしたい人、または提供したい人、自分の活躍の場を探している、または活躍したいと思っている人に、生活の質向上を目指す幅広いサポートの提供と、次のステップに進むための新たな挑戦を支援し、豊かな生活の実現をサポートすることを目的とします。
             </p>
         </section>
 
+        <!-- こんな人たちを応援します -->
+        <section id="support">
+            <h2 class="section-title"><span class="icon">🤝</span> こんな人たちを応援します！</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <span class="icon">🆘</span>
+                    <h3>サポートを<br>必要としている人</h3>
+                    <p>生活の中で困りごとを抱えていたり、新しい一歩を踏み出したいけれど、どうしたらいいか分からないと感じている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">💡</span>
+                    <h3>知識や経験を<br>増やしたい人</h3>
+                    <p>新しいことを学びたい、スキルアップしたい、自分の可能性を広げたいと意欲を持っている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🎁</span>
+                    <h3>知識や経験を<br>提供したい人</h3>
+                    <p>これまでの経験や持っているスキルを活かして、誰かの役に立ちたい、社会に貢献したいと考えている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🌟</span>
+                    <h3>活躍の場を<br>探している人</h3>
+                    <p>自分の力を試したい、新しい場所でチャレンジしたい、社会とのつながりを持ちたいと願っている方。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🚀</span>
+                    <h3>活躍したいと<br>思っている人</h3>
+                    <p>自分の能力を最大限に発揮し、目標を達成したいと強く願っている方。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 私たちの事業内容 -->
+        <section id="services">
+            <h2 class="section-title"><span class="icon">🌈</span> 私たちの事業内容</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <span class="icon">🤝</span>
+                    <h3>交流促進事業</h3>
+                    <p>知識や経験を共有し合い、仲間とのつながりを作るための活動です。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🧑‍🍳</span>
+                    <h3>職業訓練事業</h3>
+                    <p>様々な体験を通じて自分の可能性を発見し、活躍の場を広げるためのサポートです。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">🌳</span>
+                    <h3>社会参加の機会創出事業</h3>
+                    <p>人と社会との繋がりを深めるための、社会に参加する機会を作ります。</p>
+                </div>
+                <div class="card">
+                    <span class="icon">✨</span>
+                    <h3>その他必要な事業</h3>
+                    <p>上記の目的を達成するために必要な、その他の活動を行います。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 法人概要 -->
         <section id="profile">
             <h2 class="section-title">法人概要</h2>
             <table class="profile-table">
@@ -103,21 +185,15 @@
                 <tr><th>代表理事</th><td>赤嶺 睦夫</td></tr>
                 <tr><th>理事</th><td>佐渡山 要、金城 弘明</td></tr>
                 <tr><th>監事</th><td>迎里 崇雅</td></tr>
-                <tr><th>所在地</th><td>〒901-0201<br>沖縄県豊見城市真玉橋182-1F</td></tr>
+                <tr><th>所在地</th><td>〒901-0201 沖縄県豊見城市真玉橋182-1F</td></tr>
                 <tr><th>事業内容</th><td>交流促進、職業訓練、社会参画支援 等</td></tr>
             </table>
         </section>
 
+        <!-- 情報公開 -->
         <section id="governance">
             <h2 class="section-title">情報公開</h2>
-            
             <div class="gov-category">定款</div>
-            <div class="aoi-structure">
-                <a href="./kuraku-teikan-text.html#ch1">第1章</a> <a href="./kuraku-teikan-text.html#ch2">第2章</a> 
-                <a href="./kuraku-teikan-text.html#ch3">第3章</a> <a href="./kuraku-teikan-text.html#ch4">第4章</a> 
-                <a href="./kuraku-teikan-text.html#ch5">第5章</a> <a href="./kuraku-teikan-text.html#ch6">第6章</a> 
-                <a href="./kuraku-teikan-text.html#ch7">第7章</a> <a href="./kuraku-teikan-text.html#ch8">第8章</a>
-            </div>
             <div class="gov-item">
                 <span>定款（原文内容）</span>
                 <a href="./kuraku-teikan-text.html">表示</a>
@@ -126,17 +202,10 @@
                 <span>定款（スライド版）</span>
                 <a href="./kuraku-teikan-slides.html">表示</a>
             </div>
-
             <div class="gov-category">予定</div>
             <div class="gov-item">
                 <span>年間運営スケジュール</span>
                 <a href="./schedule.html">表示</a>
-            </div>
-
-            <div class="gov-category">2025年度 実績</div>
-            <div class="gov-item">
-                <span>第1回理事会 開催</span>
-                <span style="color:#999; font-size:0.8rem;">2025/10/23</span>
             </div>
         </section>
     </main>
@@ -146,7 +215,7 @@
             <a href="./index.html">🏠 トップ</a>
             <a href="./easy.html">🌸 やさしい版</a>
             <a href="./schedule.html">📅 予定</a>
-            <a href="./kuraku-teikan-text.html">⚖️ ルール</a>
+            <a href="./sitemap.html">🗺️ 地図</a>
         </nav>
         <div style="color: #999; font-size: 0.8rem;">&copy; 2025 一般社団法人くらくサポート</div>
     </footer>
