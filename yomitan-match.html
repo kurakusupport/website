@@ -689,6 +689,43 @@
           );
         }
 
+        /* ─── Login Screen ─── */
+        function AdminLogin({ onLogin, onBack }) {
+          const [id, setId] = useState("");
+          const [pass, setPass] = useState("");
+          const [error, setError] = useState(false);
+
+          const handleLogin = () => {
+            if (id === "admin" && pass === "kuraku") {
+              onLogin();
+            } else {
+              setError(true);
+            }
+          };
+
+          return (
+            <div style={{ padding: "40px 20px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
+              <BackBtn onClick={onBack} />
+              <div style={{ background: "#fff", borderRadius: 24, padding: "32px 28px", maxWidth: 360, width: "100%", boxShadow: "0 10px 32px rgba(0,0,0,0.08)", border: "2px solid #E5E7EB" }}>
+                <div style={{ textAlign: "center", marginBottom: 24 }}>
+                  <div style={{ fontSize: 40, marginBottom: 8 }}>🔧</div>
+                  <h2 style={{ margin: 0, fontSize: 18, fontWeight: 900, color: "#1E293B", fontFamily: F }}>管理者ログイン</h2>
+                  <p style={{ fontSize: 13, color: "#64748B", marginTop: 4 }}>IDとパスワードを入力してください</p>
+                </div>
+                <FormInput label="ID" placeholder="admin" value={id} onChange={setId} />
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1E293B", marginBottom: 6, fontFamily: F }}>パスワード</label>
+                  <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)}
+                    style={{ width: "100%", padding: "14px 16px", fontSize: 16, border: `2px solid ${error ? "#EF4444" : "#E5E7EB"}`, borderRadius: 12, fontFamily: F, outline: "none", boxSizing: "border-box" }}
+                    onFocus={e => e.target.style.borderColor = "#EA580C"} onBlur={e => e.target.style.borderColor = error ? "#EF4444" : "#E5E7EB"} />
+                  {error && <div style={{ fontSize: 11, color: "#EF4444", marginTop: 6, fontWeight: 700 }}>IDまたはパスワードが違います</div>}
+                </div>
+                <PrimaryButton onClick={handleLogin} fullWidth>ログイン</PrimaryButton>
+              </div>
+            </div>
+          );
+        }
+
         /* ─── Main App ─── */
         function App() {
           const [mode, setMode] = useState("top");
@@ -724,7 +761,7 @@
                     <div style={{ fontSize: 10, opacity: 0.85, letterSpacing: 2 }}>地域の助け合いマッチング</div>
                   </div>
                   {mode === "top" && (
-                    <button onClick={(e) => { e.stopPropagation(); setMode("admin"); }}
+                    <button onClick={(e) => { e.stopPropagation(); setMode("admin_login"); }}
                       style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 8, padding: "6px 10px", fontSize: 11, color: "#fff", cursor: "pointer", fontFamily: F, fontWeight: 700, outline: "none" }}>
                       🔧 管理者
                     </button>
@@ -763,6 +800,7 @@
 
               {mode === "request" && <RequestFlow categories={categories} onTop={goTop} />}
               {mode === "register" && <RegisterFlow categories={categories} onTop={goTop} />}
+              {mode === "admin_login" && <AdminLogin onLogin={() => setMode("admin")} onBack={goTop} />}
               {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onBack={goTop} />}
             </div>
           );
