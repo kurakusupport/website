@@ -894,6 +894,13 @@
           {mode === "register" && <RegisterFlow categories={categories} onTop={goTop} />}
           {mode === "admin_login" && <AdminLogin onLogin={() => setMode("admin")} onBack={goTop} />}
           {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onBack={goTop} />}
+
+          {/* Footer */}
+          <footer style={{ padding: "32px 20px", textAlign: "center", fontSize: 11, color: "#94A3B8", fontFamily: F }}>
+            <div style={{ marginBottom: 6, fontWeight: 700 }}>© 2026 株式会社琉球のタネ</div>
+            <div style={{ opacity: 0.8 }}>やまたいもーお助け隊 Portable Edition v1.0.1</div>
+            <div style={{ marginTop: 8, fontSize: 9, opacity: 0.6 }}>地域の絆を、もっと身近に。</div>
+          </footer>
         </div>
       );
     }
