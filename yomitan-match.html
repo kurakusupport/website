@@ -91,7 +91,7 @@
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState, useEffect } = React;
+    const { useState, useEffect, useCallback } = React;
 
     /* ─────────────────────────────────────────────
        データ定義
@@ -273,9 +273,18 @@
                 📈 編集画面を開く
               </a>
             </div>
-            <div style={{ fontSize: 10, color: "#60A5FA", background: "rgba(255,255,255,0.5)", padding: "8px", borderRadius: 8, marginTop: 4 }}>
-              ※シートの「status」列に「hold」と入れると一時保留になります。<br />
-              ※反映には数秒〜1分ほどかかる場合があります。
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+              <div style={{ fontSize: 10, color: "#60A5FA", background: "rgba(255,255,255,0.5)", padding: "8px", borderRadius: 8, flex: 1, marginRight: 8 }}>
+                ※シートの反映には最大1分ほどかかる場合があります。反映されない場合は右のボタンを押してください。
+              </div>
+              <button onClick={onSync}
+                style={{
+                  background: "#10B981", color: "#fff", border: "none",
+                  padding: "8px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800,
+                  cursor: "pointer", boxShadow: "0 4px 12px rgba(16,185,129,0.3)", whiteSpace: "nowrap"
+                }}>
+                🔄 最新の状態に更新
+              </button>
             </div>
           </div>
 
@@ -809,23 +818,26 @@
       const [mode, setMode] = useState("top");
       const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
 
-      useEffect(() => {
+      const loadData = useCallback(() => {
         if (!SPREADSHEET_CSV_URL) return;
 
-        // 編集用URLをCSVエクスポート用URLに変換する
+        // 編集用URLをCSVエクスポート用URLに変換し、キャッシュ回避のクエリを追加
         let fetchUrl = SPREADSHEET_CSV_URL;
         if (fetchUrl.includes("/edit")) {
           fetchUrl = fetchUrl.replace(/\/edit.*$/, "/export?format=csv");
-          // GID（シートID）が含まれている場合はそれも引き継ぐ
           const gidMatch = SPREADSHEET_CSV_URL.match(/gid=([0-9]+)/);
           if (gidMatch) fetchUrl += `&gid=${gidMatch[1]}`;
         }
 
-        fetch(fetchUrl)
+        // キャッシュ回避用のタイムスタンプを追加
+        const sep = fetchUrl.includes("?") ? "&" : "?";
+        const finalUrl = `${fetchUrl}${sep}t=${Date.now()}`;
+
+        fetch(finalUrl)
           .then(r => r.text())
           .then(csv => {
             if (csv.trim().startsWith("<!DOCTYPE html>")) {
-              console.error("CSVの代わりにHTMLが返されました。スプレッドシートの閲覧権限を確認してください。");
+              console.error("CSV解析エラー: スプレッドシートの閲覧共有設定が「リンクを知っている全員」になっているか確認してください。");
               return;
             }
             const lines = csv.split("\n").slice(1);
@@ -833,10 +845,17 @@
               const [id, icon, label, desc, status] = line.split(",").map(s => s.trim().replace(/^"|"$/g, ""));
               return { id, icon, label, desc, status: status || "active" };
             });
-            if (parsed.length > 0) setCategories(parsed);
+            if (parsed.length > 0) {
+              setCategories(parsed);
+              console.log("データ更新完了:", new Date().toLocaleTimeString());
+            }
           })
           .catch(err => console.log("CSV読み込み失敗:", err));
       }, []);
+
+      useEffect(() => {
+        loadData();
+      }, [loadData]);
 
       const goTop = () => setMode("top");
 
@@ -893,12 +912,12 @@
           {mode === "request" && <RequestFlow categories={categories} onTop={goTop} />}
           {mode === "register" && <RegisterFlow categories={categories} onTop={goTop} />}
           {mode === "admin_login" && <AdminLogin onLogin={() => setMode("admin")} onBack={goTop} />}
-          {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onBack={goTop} />}
+          {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onSync={loadData} onBack={goTop} />}
 
           {/* Footer */}
           <footer style={{ padding: "32px 20px", textAlign: "center", fontSize: 11, color: "#94A3B8", fontFamily: F }}>
             <div style={{ marginBottom: 6, fontWeight: 700 }}>© 2026 株式会社琉球のタネ</div>
-            <div style={{ opacity: 0.8 }}>やまたいもーお助け隊 Portable Edition v1.0.1</div>
+            <div style={{ opacity: 0.8 }}>やまたいもーお助け隊 Portable Edition v1.0.2</div>
             <div style={{ marginTop: 8, fontSize: 9, opacity: 0.6 }}>地域の絆を、もっと身近に。</div>
           </footer>
         </div>
