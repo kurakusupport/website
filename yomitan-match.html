@@ -256,12 +256,26 @@
           <p style={{ fontSize: 13, color: "#64748B", margin: "0 0 16px", fontFamily: F }}>お困りごとカテゴリの追加・編集・保留設定</p>
 
           <div style={{ background: "#EFF6FF", borderRadius: 12, padding: "14px 16px", marginBottom: 20, border: "1px solid #BFDBFE" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>📊 スプレッドシート連携</div>
-            <div style={{ fontSize: 11, color: "#3B82F6", lineHeight: 1.6 }}>
-              Googleスプレッドシートでも編集できます。<br />
-              列構成：id / icon / label / desc / status<br />
-              status列に「hold」と入れると一時保留になります。<br />
-              CSV公開URLをコード内の SPREADSHEET_CSV_URL に設定してください。
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#1E40AF", marginBottom: 4 }}>📊 スプレッドシート連携</div>
+                <div style={{ fontSize: 11, color: "#3B82F6", lineHeight: 1.6 }}>
+                  Googleスプレッドシートで一括編集が可能です。<br />
+                  列構成：id / icon / label / desc / status
+                </div>
+              </div>
+              <a href={SPREADSHEET_CSV_URL} target="_blank" rel="noopener noreferrer"
+                style={{
+                  background: "#3B82F6", color: "#fff", textDecoration: "none",
+                  padding: "8px 12px", borderRadius: 8, fontSize: 11, fontWeight: 800,
+                  boxShadow: "0 4px 12px rgba(59,130,246,0.3)", display: "flex", alignItems: "center", gap: 4
+                }}>
+                📈 編集画面を開く
+              </a>
+            </div>
+            <div style={{ fontSize: 10, color: "#60A5FA", background: "rgba(255,255,255,0.5)", padding: "8px", borderRadius: 8, marginTop: 4 }}>
+              ※シートの「status」列に「hold」と入れると一時保留になります。<br />
+              ※反映には数秒〜1分ほどかかる場合があります。
             </div>
           </div>
 
