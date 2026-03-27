@@ -811,9 +811,23 @@
 
       useEffect(() => {
         if (!SPREADSHEET_CSV_URL) return;
-        fetch(SPREADSHEET_CSV_URL)
+
+        // 編集用URLをCSVエクスポート用URLに変換する
+        let fetchUrl = SPREADSHEET_CSV_URL;
+        if (fetchUrl.includes("/edit")) {
+          fetchUrl = fetchUrl.replace(/\/edit.*$/, "/export?format=csv");
+          // GID（シートID）が含まれている場合はそれも引き継ぐ
+          const gidMatch = SPREADSHEET_CSV_URL.match(/gid=([0-9]+)/);
+          if (gidMatch) fetchUrl += `&gid=${gidMatch[1]}`;
+        }
+
+        fetch(fetchUrl)
           .then(r => r.text())
           .then(csv => {
+            if (csv.trim().startsWith("<!DOCTYPE html>")) {
+              console.error("CSVの代わりにHTMLが返されました。スプレッドシートの閲覧権限を確認してください。");
+              return;
+            }
             const lines = csv.split("\n").slice(1);
             const parsed = lines.filter(l => l.trim()).map(line => {
               const [id, icon, label, desc, status] = line.split(",").map(s => s.trim().replace(/^"|"$/g, ""));
