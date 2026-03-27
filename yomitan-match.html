@@ -232,7 +232,7 @@
     }
 
     /* ─── Admin Mode ─── */
-    function AdminMode({ categories, setCategories, onBack }) {
+    function AdminMode({ categories, setCategories, onSync, onBack, csvError }) {
       const [newCat, setNewCat] = useState({ id: "", icon: "📦", label: "", desc: "", status: "active" });
 
       const updateCat = (id, field, value) => {
@@ -287,6 +287,11 @@
                 🔄 最新の状態に更新
               </button>
             </div>
+            {csvError && (
+              <div style={{ marginTop: 10, background: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: 8, padding: "10px", fontSize: 12, color: "#DC2626", fontWeight: 700 }}>
+                ⚠️ {csvError}
+              </div>
+            )}
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -784,7 +789,7 @@
       const [error, setError] = useState(false);
 
       const handleLogin = () => {
-        if (id === "admin" && pass === "kuraku") {
+        if (id.trim().toLowerCase() === "admin" && pass.trim().toLowerCase() === "kuraku") {
           onLogin();
         } else {
           setError(true);
@@ -804,6 +809,7 @@
             <div style={{ marginBottom: 20 }}>
               <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: "#1E293B", marginBottom: 6, fontFamily: F }}>パスワード</label>
               <input type="password" placeholder="••••••••" value={pass} onChange={e => setPass(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleLogin()}
                 style={{ width: "100%", padding: "14px 16px", fontSize: 16, border: `2px solid ${error ? "#EF4444" : "#E5E7EB"}`, borderRadius: 12, fontFamily: F, outline: "none", boxSizing: "border-box" }}
                 onFocus={e => e.target.style.borderColor = "#EA580C"} onBlur={e => e.target.style.borderColor = error ? "#EF4444" : "#E5E7EB"} />
               {error && <div style={{ fontSize: 11, color: "#EF4444", marginTop: 6, fontWeight: 700 }}>IDまたはパスワードが違います</div>}
@@ -818,9 +824,11 @@
     function App() {
       const [mode, setMode] = useState("top");
       const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+      const [csvError, setCsvError] = useState(null);
 
       const loadData = useCallback(() => {
         if (!SPREADSHEET_CSV_URL) return;
+        setCsvError(null);
 
         // 編集用URLをCSVエクスポート用URLに変換し、キャッシュ回避のクエリを追加
         let fetchUrl = SPREADSHEET_CSV_URL;
@@ -838,7 +846,7 @@
           .then(r => r.text())
           .then(csv => {
             if (csv.trim().startsWith("<!DOCTYPE html>")) {
-              console.error("CSV解析エラー: スプレッドシートの閲覧共有設定が「リンクを知っている全員」になっているか確認してください。");
+              setCsvError("アクセス権限エラー：スプレッドシートの「一般的なアクセス」を「リンクを知っている全員（閲覧者）」に変更してください。");
               return;
             }
             const lines = csv.split("\n").slice(1);
@@ -851,7 +859,10 @@
               console.log("データ更新完了:", new Date().toLocaleTimeString());
             }
           })
-          .catch(err => console.log("CSV読み込み失敗:", err));
+          .catch(err => {
+            console.log("CSV読み込み失敗:", err);
+            setCsvError("データの取得に失敗しました。URLが正しいか確認してください。");
+          });
       }, []);
 
       useEffect(() => {
@@ -913,7 +924,7 @@
           {mode === "request" && <RequestFlow categories={categories} onTop={goTop} />}
           {mode === "register" && <RegisterFlow categories={categories} onTop={goTop} />}
           {mode === "admin_login" && <AdminLogin onLogin={() => setMode("admin")} onBack={goTop} />}
-          {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onSync={loadData} onBack={goTop} />}
+          {mode === "admin" && <AdminMode categories={categories} setCategories={setCategories} onSync={loadData} onBack={goTop} csvError={csvError} />}
 
           {/* Footer */}
           <footer style={{ padding: "32px 20px", textAlign: "center", fontSize: 11, color: "#94A3B8", fontFamily: F }}>
