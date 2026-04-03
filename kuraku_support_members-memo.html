@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,7 +24,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
 
@@ -84,8 +85,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ポンチ絵スタイル */
@@ -111,7 +119,7 @@
             padding: 20px;
             background: #fff;
             position: relative;
-            box-shadow: 5px 5px 0px rgba(0,0,0,0.1);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
         }
 
         .member-box::before {
@@ -228,7 +236,7 @@
             padding: 20px;
             color: white;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .comparison-card.regular {
@@ -253,7 +261,7 @@
             font-weight: bold;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .card-content {
@@ -301,7 +309,7 @@
             padding: 15px;
             background: white;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .stat-label {
@@ -348,7 +356,7 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .table-header {
@@ -538,6 +546,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -555,7 +564,7 @@
             <!-- ポンチ絵ビュー -->
             <div id="sketch-view" class="view active">
                 <h2 class="sketch-title">会員区分と役割の全体像</h2>
-                
+
                 <div class="member-flow">
                     <div class="member-box regular">
                         <div class="member-header">
@@ -634,7 +643,7 @@
             <!-- インフォグラフィックビュー -->
             <div id="infographic-view" class="view">
                 <h2 class="info-title">3つの会員区分 比較マップ</h2>
-                
+
                 <div class="comparison-table">
                     <div class="comparison-card regular">
                         <div class="card-icon">👔</div>
@@ -701,7 +710,7 @@
             <!-- 比較表ビュー -->
             <div id="comparison-view" class="view">
                 <h2 class="comparison-view-title">会員区分 詳細比較表</h2>
-                
+
                 <div class="comparison-table-wrapper">
                     <div class="comparison-table-grid">
                         <!-- ヘッダー行 -->
@@ -960,7 +969,7 @@
             sketchView.classList.remove('active');
             infographicView.classList.remove('active');
             comparisonView.classList.remove('active');
-            
+
             // すべてのボタンを非アクティブ
             buttons.forEach(btn => btn.classList.remove('active'));
 
@@ -978,4 +987,5 @@
         }
     </script>
 </body>
+
 </html>
