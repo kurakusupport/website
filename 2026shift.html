@@ -1052,20 +1052,16 @@
       { name: 'Aさん', ci: 0 }, { name: 'Bさん', ci: 1 }, { name: 'Cさん', ci: 2 }
     ];
     const PRESETS = [
-      { title: '泊夜間', day: 1, s: '18:00', e: '21:00', label: '泊夜間（月18-21）' },
-      { title: '泊夜間', day: 5, s: '18:00', e: '22:00', label: '泊夜間（金18-22）' },
-      { title: '就学支援センター', day: 1, s: '09:30', e: '12:30', label: '就学支援（月-12:30）' },
-      { title: '就学支援センター', day: 1, s: '09:30', e: '15:30', label: '就学支援（月-15:30）' },
-      { title: '就学支援センター', day: 2, s: '09:30', e: '12:30', label: '就学支援（火-12:30）' },
-      { title: '就学支援センター', day: 2, s: '09:30', e: '15:30', label: '就学支援（火-15:30）' },
-      { title: '就学支援センター', day: 3, s: '09:30', e: '12:30', label: '就学支援（水-12:30）' },
-      { title: '就学支援センター', day: 3, s: '09:30', e: '15:30', label: '就学支援（水-15:30）' },
-      { title: '豊見城高校', day: 1, s: '09:00', e: '13:00', label: '豊見城高校（月9-13）' },
-      { title: '豊見城高校', day: 5, s: '09:00', e: '13:00', label: '豊見城高校（金9-13）' },
+      { title: 'くらく訓練', day: 1, s: '11:00', e: '14:00', label: 'くらく訓練（月）' },
+      { title: 'くらく訓練', day: 2, s: '11:00', e: '14:00', label: 'くらく訓練（火）' },
+      { title: 'くらく訓練', day: 3, s: '11:00', e: '14:00', label: 'くらく訓練（水）' },
+      { title: 'くらく訓練', day: 4, s: '11:00', e: '14:00', label: 'くらく訓練（木）' },
+      { title: 'くらく訓練', day: 5, s: '11:00', e: '14:00', label: 'くらく訓練（金）' },
+
     ];
 
     // ★★★ 自動接続用: デプロイ済みGASのURLをここに貼り付けておくと、各端末での初期設定（URL入力）をスキップできます ★★★
-    const DEFAULT_GAS_URL = '';
+    const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwQA2GxGFw5Sx10Naz5BGsciZBtniQClKcioLSICa2QQiuP2IERYvYnk5EtK2WMqL0X/exec';
 
     let GAS_URL = localStorage.getItem('gasUrl') || DEFAULT_GAS_URL;
     let events = JSON.parse(localStorage.getItem('schEv3') || '[]');
