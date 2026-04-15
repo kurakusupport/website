@@ -1065,6 +1065,7 @@
 
     let GAS_URL = localStorage.getItem('gasUrl') || DEFAULT_GAS_URL;
     let events = JSON.parse(localStorage.getItem('schEv3') || '[]');
+    let deletedIds = new Set(JSON.parse(localStorage.getItem('schDel3') || '[]'));
     let activePerson = -1;
     let weekStart = getMonday(new Date());
     let editId = null;
@@ -1227,48 +1228,51 @@
         return;
       }
 
-      // ② サーバーのデータを正規化
-      const serverEvents = serverData.map(ev => ({
-        ...ev,
-        start: fmtTime(ev.start),
-        end: fmtTime(ev.end),
-        person: Number(ev.person),
-        day: Number(ev.day),
-        id: String(ev.id),
-        title: String(ev.title || ''),
-        memo: String(ev.memo || '')
-      }));
+      // ② サーバーのデータを正規化（IDなし・undefinedは除外）
+      const serverEvents = serverData
+        .map(ev => ({
+          ...ev,
+          start: fmtTime(ev.start),
+          end: fmtTime(ev.end),
+          person: Number(ev.person),
+          day: Number(ev.day),
+          id: String(ev.id),
+          title: String(ev.title || ''),
+          memo: String(ev.memo || '')
+        }))
+        .filter(ev => ev.id && ev.id.trim() !== '' && ev.id !== 'undefined');
 
-      // ③ ローカルとサーバーをマージ
-      const serverMap = {};
-      serverEvents.forEach(ev => { serverMap[ev.id] = ev });
+      // ③ サーバーにあるIDのセット
+      const serverIds = new Set(serverEvents.map(ev => ev.id));
 
-      const localMap = {};
-      events.forEach(ev => { localMap[ev.id] = ev });
+      // ④ ローカルにしかないデータ = 未送信の追加分（削除済みIDは除く）
+      //    ★ ここが修正の肝：deletedIds にあるものは復活させない
+      const localOnlyEvents = events.filter(ev =>
+        ev.id &&
+        ev.id.trim() !== '' &&
+        ev.id !== 'undefined' &&
+        !serverIds.has(ev.id) &&
+        !deletedIds.has(ev.id)  // 削除済みは除外
+      );
 
-      // マージ: 両方のIDを統合（ローカル優先＝ローカルにあるものはローカルのデータ）
-      const mergedMap = {};
+      // ⑤ マージ: サーバーデータ（正）+ ローカル未送信分
+      const merged = [...serverEvents, ...localOnlyEvents];
 
-      // まずサーバーのデータを入れる
-      serverEvents.forEach(ev => { mergedMap[ev.id] = ev });
-
-      // ローカル固有のデータを追加（サーバーにないもの）
-      events.forEach(ev => {
-        if (!mergedMap[ev.id]) {
-          mergedMap[ev.id] = ev;
+      // ⑥ deletedIds のうちサーバーからも消えたものはクリーンアップ
+      for (const did of deletedIds) {
+        if (!serverIds.has(did)) {
+          deletedIds.delete(did); // サーバーからも消えたので追跡不要
         }
-      });
+      }
 
-      const merged = Object.values(mergedMap);
-
-      // ④ ローカルに保存
+      // ⑦ ローカルに保存
       events = merged;
       saveLocal();
       renderGrid();
       renderSummary();
 
-      // ⑤ ログイン済みならサーバーにも一括プッシュ
-      if (isAuthed()) {
+      // ⑧ ログイン済み かつ ローカル未送信データがあればサーバーに一括プッシュ
+      if (isAuthed() && localOnlyEvents.length > 0) {
         const pushResult = await apiPost({ action: 'bulkSync', events: merged });
         if (pushResult && pushResult.success) {
           updateConn(true);
@@ -1278,13 +1282,16 @@
         }
       } else {
         updateConn(true);
-        showToast('同期完了（読み取り）');
+        showToast(isAuthed() ? '同期完了' : '同期完了（読み取り）');
       }
 
       syncing = false;
     }
 
-    function saveLocal() { localStorage.setItem('schEv3', JSON.stringify(events)) }
+    function saveLocal() {
+      localStorage.setItem('schEv3', JSON.stringify(events));
+      localStorage.setItem('schDel3', JSON.stringify([...deletedIds]));
+    }
 
     // ══════════════════════════════════════
     //  Tabs / Week / Views
@@ -1427,11 +1434,27 @@
 
     async function deleteEv() {
       if (!editId) return; if (!confirm('この予定を削除しますか？')) return;
-      const delId = editId; events = events.filter(e => e.id !== delId);
+      const delId = editId;
+
+      // ★ 削除済みIDを記録（syncData でのゾンビ復活を防ぐ）
+      deletedIds.add(delId);
+      events = events.filter(e => e.id !== delId);
       saveLocal(); closeModal(); renderGrid(); renderSummary();
+
       const res = await apiPost({ action: 'delete', id: delId });
-      if (res && res.success) { showToast('削除しました') }
-      else if (GAS_URL) { showToast('サーバー削除失敗（ローカル保存済）', 'warn') }
+
+      // ★ Array が返ってきた場合 = GASがリダイレクト後 doGet を実行した可能性あり
+      //    この場合は実際に削除されたかどうか不明なため、再試行
+      if (res && Array.isArray(res)) {
+        // リダイレクト問題：もう一度 delete を送信
+        const res2 = await apiPost({ action: 'delete', id: delId });
+        if (res2 && res2.success) { showToast('削除しました') }
+        else { showToast('削除済み（次回同期で反映）', 'warn') }
+      } else if (res && res.success) {
+        showToast('削除しました');
+      } else if (GAS_URL) {
+        showToast('サーバー削除失敗（ローカル削除済）', 'warn');
+      }
     }
 
     // ══════════════════════════════════════
