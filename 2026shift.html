@@ -1194,7 +1194,12 @@
 
         setLoading(false);
 
-        if (d.error === 'auth_failed') {
+        // POSTの後にリダイレクトを追従し、doGet() の配列が返ってきた場合の対策
+        if (d && Array.isArray(d)) {
+          return { success: true };
+        }
+
+        if (d && d.error === 'auth_failed') {
           adminPw = ''; sessionStorage.removeItem('adminPw'); updateAuthBtn();
           showToast('パスワードが違います', 'error');
           return null;
