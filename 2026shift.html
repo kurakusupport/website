@@ -1064,7 +1064,10 @@
       { title: '豊見城高校', day: 5, s: '09:00', e: '13:00', label: '豊見城高校（金9-13）' },
     ];
 
-    let GAS_URL = localStorage.getItem('gasUrl') || '';
+    // ★★★ 自動接続用: デプロイ済みGASのURLをここに貼り付けておくと、各端末での初期設定（URL入力）をスキップできます ★★★
+    const DEFAULT_GAS_URL = '';
+
+    let GAS_URL = localStorage.getItem('gasUrl') || DEFAULT_GAS_URL;
     let events = JSON.parse(localStorage.getItem('schEv3') || '[]');
     let activePerson = -1;
     let weekStart = getMonday(new Date());
