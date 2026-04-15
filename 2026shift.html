@@ -1,1166 +1,1576 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>週間スケジュール管理表</title>
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-
-:root {
-  --bg: #0c0e14;
-  --surface: #151821;
-  --surface2: #1c2030;
-  --surface3: #242838;
-  --border: #262a3a;
-  --border-light: #2f3448;
-  --text: #e4e6ee;
-  --text-dim: #7a7f94;
-  --text-muted: #50546a;
-  --p0: #ff7eb3;
-  --p0-bg: rgba(255,126,179,0.10);
-  --p0-glow: rgba(255,126,179,0.25);
-  --p1: #7ec8e3;
-  --p1-bg: rgba(126,200,227,0.10);
-  --p1-glow: rgba(126,200,227,0.25);
-  --p2: #c4e97c;
-  --p2-bg: rgba(196,233,124,0.10);
-  --p2-glow: rgba(196,233,124,0.25);
-  --accent: #7ec8e3;
-  --danger: #ff6b6b;
-  --success: #6bcb77;
-  --radius: 8px;
-  --hour-h: 50px;
-}
-
-html { font-size: 14px; }
-body {
-  font-family: 'Zen Kaku Gothic New', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
-
-/* ── Loading / Status ── */
-.status-bar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: transparent;
-  z-index: 999;
-  overflow: hidden;
-}
-.status-bar.loading {
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  animation: shimmer 1.2s infinite;
-}
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-.status-bar.loading { background-size: 200% 100%; }
-
-.toast {
-  position: fixed;
-  bottom: 90px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  padding: 10px 20px;
-  border-radius: 24px;
-  font-size: 0.78rem;
-  font-weight: 500;
-  z-index: 300;
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-  pointer-events: none;
-  white-space: nowrap;
-}
-.toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-.toast.success { background: rgba(107,203,119,0.2); color: var(--success); border: 1px solid rgba(107,203,119,0.3); }
-.toast.error { background: rgba(255,107,107,0.2); color: var(--danger); border: 1px solid rgba(255,107,107,0.3); }
-
-/* ── Header ── */
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(12,14,20,0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 16px 10px;
-}
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.app-header h1 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  background: linear-gradient(135deg, var(--p0), var(--p1), var(--p2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.sync-btn {
-  padding: 5px 12px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-dim);
-  font-size: 0.68rem;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.sync-btn:active { transform: scale(0.94); }
-.connection-status {
-  font-size: 0.65rem;
-  font-family: 'IBM Plex Mono', monospace;
-  color: var(--text-muted);
-  margin-top: 4px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.conn-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--text-muted);
-}
-.conn-dot.online { background: var(--success); box-shadow: 0 0 6px rgba(107,203,119,0.5); }
-.conn-dot.offline { background: var(--danger); }
-
-/* ── Person Tabs ── */
-.person-tabs {
-  display: flex;
-  gap: 6px;
-  padding: 10px 16px 6px;
-}
-.person-tab {
-  flex: 1;
-  padding: 9px 4px;
-  border-radius: var(--radius);
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-  color: var(--text-dim);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-family: inherit;
-}
-.person-tab:active { transform: scale(0.97); }
-.ptab-dot {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  margin-right: 3px;
-  vertical-align: middle;
-}
-
-.person-tab[data-p="0"] .ptab-dot { background: var(--p0); }
-.person-tab[data-p="1"] .ptab-dot { background: var(--p1); }
-.person-tab[data-p="2"] .ptab-dot { background: var(--p2); }
-
-.person-tab[data-p="-1"].active { border-color: var(--accent); color: var(--accent); background: rgba(126,200,227,0.08); }
-.person-tab[data-p="0"].active { border-color: var(--p0); color: var(--p0); background: var(--p0-bg); box-shadow: 0 0 14px var(--p0-glow); }
-.person-tab[data-p="1"].active { border-color: var(--p1); color: var(--p1); background: var(--p1-bg); box-shadow: 0 0 14px var(--p1-glow); }
-.person-tab[data-p="2"].active { border-color: var(--p2); color: var(--p2); background: var(--p2-bg); box-shadow: 0 0 14px var(--p2-glow); }
-
-/* ── View Toggle ── */
-.view-toggle {
-  display: flex;
-  gap: 0;
-  padding: 6px 16px 4px;
-}
-.view-btn {
-  flex: 1;
-  padding: 7px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-dim);
-  font-size: 0.72rem;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.view-btn:first-child { border-radius: var(--radius) 0 0 var(--radius); }
-.view-btn:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
-.view-btn:not(:first-child) { border-left: none; }
-.view-btn.active { background: rgba(126,200,227,0.08); color: var(--accent); border-color: var(--accent); }
-
-/* ── Week Nav ── */
-.week-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px 10px;
-}
-.week-nav button {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 1.1rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.week-nav button:active { transform: scale(0.9); background: var(--surface2); }
-.week-label {
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--text-dim);
-  font-family: 'IBM Plex Mono', monospace;
-}
-
-/* ── Schedule Grid ── */
-.schedule-wrapper {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 0 90px;
-  scrollbar-width: none;
-}
-.schedule-wrapper::-webkit-scrollbar { display: none; }
-
-.schedule-grid {
-  display: grid;
-  grid-template-columns: 40px repeat(7, minmax(96px, 1fr));
-  min-width: 720px;
-  position: relative;
-}
-
-.corner-header {
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 11;
-  background: rgba(12,14,20,0.95);
-}
-
-.day-header {
-  text-align: center;
-  padding: 8px 4px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: rgba(12,14,20,0.95);
-  backdrop-filter: blur(8px);
-}
-.day-header .dow {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-.day-header .dnum {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-top: 2px;
-  font-family: 'IBM Plex Mono', monospace;
-}
-.day-header.today .dnum {
-  background: var(--p0);
-  color: var(--bg);
-  width: 28px; height: 28px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.day-header.sun { color: #ff8a8a; }
-.day-header.sat { color: #8ab4f8; }
-
-.time-col { position: relative; }
-.time-label {
-  position: absolute;
-  right: 4px;
-  font-size: 0.58rem;
-  font-family: 'IBM Plex Mono', monospace;
-  color: var(--text-muted);
-  transform: translateY(-50%);
-  line-height: 1;
-}
-
-.day-col {
-  position: relative;
-  border-left: 1px solid var(--border);
-}
-.h-line {
-  position: absolute;
-  left: 0; right: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.035);
-}
-.hh-line {
-  position: absolute;
-  left: 20%; right: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.02);
-}
-
-/* ── Event Blocks ── */
-.ev {
-  position: absolute;
-  left: 3px; right: 3px;
-  border-radius: 5px;
-  padding: 4px 6px;
-  font-size: 0.66rem;
-  font-weight: 500;
-  line-height: 1.3;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.12s, box-shadow 0.12s;
-  z-index: 5;
-  border-left: 3px solid;
-}
-.ev:active { transform: scale(0.97); }
-.ev-t {
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.ev-time {
-  font-size: 0.56rem;
-  opacity: 0.65;
-  margin-top: 1px;
-  font-family: 'IBM Plex Mono', monospace;
-}
-.ev-memo {
-  font-size: 0.54rem;
-  opacity: 0.5;
-  margin-top: 1px;
-}
-
-.ev.p0 { background: var(--p0-bg); border-left-color: var(--p0); color: var(--p0); }
-.ev.p1 { background: var(--p1-bg); border-left-color: var(--p1); color: var(--p1); }
-.ev.p2 { background: var(--p2-bg); border-left-color: var(--p2); color: var(--p2); }
-
-.now-line {
-  position: absolute;
-  left: 0; right: 0;
-  height: 2px;
-  background: var(--p0);
-  z-index: 8;
-  box-shadow: 0 0 10px var(--p0-glow);
-}
-.now-line::before {
-  content: '';
-  position: absolute;
-  left: -4px; top: -3px;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--p0);
-}
-
-/* ── Summary ── */
-.summary-panel { padding: 16px; display: none; }
-.summary-panel.show { display: block; }
-.sum-card {
-  background: var(--surface);
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.sum-card h3 {
-  font-size: 0.82rem;
-  font-weight: 700;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.sum-card h3 .sdot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-}
-.sum-row {
-  display: grid;
-  grid-template-columns: 32px 1fr 80px 60px;
-  align-items: center;
-  padding: 6px 0;
-  font-size: 0.73rem;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.sum-row:last-child { border-bottom: none; }
-.sum-day { color: var(--text-muted); font-weight: 500; }
-.sum-time { font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem; color: var(--text-dim); }
-.sum-dur { font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-align: right; }
-
-/* ── Modal ── */
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  z-index: 200;
-  display: none;
-  align-items: flex-end;
-  justify-content: center;
-}
-.modal-bg.show { display: flex; animation: fadeIn 0.2s; }
-@keyframes fadeIn { from{opacity:0}to{opacity:1} }
-@keyframes slideUp { from{transform:translateY(100%)}to{transform:translateY(0)} }
-
-.modal {
-  background: var(--surface);
-  border-radius: 18px 18px 0 0;
-  width: 100%;
-  max-width: 480px;
-  max-height: 88dvh;
-  overflow-y: auto;
-  padding: 20px 20px 28px;
-  animation: slideUp 0.3s cubic-bezier(0.16,1,0.3,1);
-}
-.modal-handle {
-  width: 36px; height: 4px;
-  background: var(--border-light);
-  border-radius: 2px;
-  margin: 0 auto 18px;
-}
-.modal h2 {
-  font-size: 1rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-.fg { margin-bottom: 14px; }
-.fg label {
-  display: block;
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  margin-bottom: 5px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.fg input, .fg select {
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 0.85rem;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.fg input:focus, .fg select:focus { border-color: var(--accent); }
-.frow { display: flex; gap: 10px; }
-.frow .fg { flex: 1; }
-
-.presets-label {
-  font-size: 0.66rem;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-.preset-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 14px;
-}
-.pchip {
-  padding: 5px 10px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  color: var(--text-dim);
-  font-size: 0.66rem;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.pchip:active { transform: scale(0.95); }
-.pchip.on { border-color: var(--accent); background: rgba(126,200,227,0.1); color: var(--accent); }
-
-.modal-btns {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-}
-.mbtn {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  font-size: 0.82rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-  transition: all 0.2s;
-}
-.mbtn:active { transform: scale(0.97); }
-.mbtn-save { background: var(--accent); color: var(--bg); }
-.mbtn-cancel { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
-.mbtn-del {
-  min-width: 56px; flex: 0;
-  background: rgba(255,107,107,0.1);
-  border: 1px solid rgba(255,107,107,0.25);
-  color: var(--danger);
-}
-
-/* ── Setup Screen ── */
-.setup-screen {
-  position: fixed;
-  inset: 0;
-  background: var(--bg);
-  z-index: 500;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-}
-.setup-screen.hidden { display: none; }
-.setup-screen h2 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, var(--p0), var(--p1));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.setup-screen p {
-  font-size: 0.8rem;
-  color: var(--text-dim);
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-.setup-screen input {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 0.82rem;
-  font-family: 'IBM Plex Mono', monospace;
-  outline: none;
-  margin-bottom: 14px;
-}
-.setup-screen input:focus { border-color: var(--accent); }
-.setup-screen button {
-  padding: 12px 32px;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent);
-  color: var(--bg);
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: inherit;
-}
-.setup-screen .skip-btn {
-  margin-top: 12px;
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  font-size: 0.75rem;
-}
-
-/* ── FAB ── */
-.fab {
-  position: fixed;
-  bottom: 28px;
-  right: 20px;
-  width: 54px; height: 54px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--p1), var(--p2));
-  color: var(--bg);
-  border: none;
-  font-size: 1.6rem;
-  font-weight: 300;
-  cursor: pointer;
-  box-shadow: 0 4px 24px rgba(126,200,227,0.35);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.2s;
-}
-.fab:active { transform: scale(0.88); }
-</style>
-</head>
-<body>
-
-<!-- Setup Screen -->
-<div class="setup-screen" id="setupScreen">
-  <h2>初期設定</h2>
-  <p>Google Apps ScriptのデプロイURLを<br>貼り付けてください</p>
-  <input type="text" id="gasUrlInput" placeholder="https://script.google.com/macros/s/...">
-  <button onclick="saveGasUrl()">接続する</button>
-  <button class="skip-btn" onclick="skipSetup()">オフラインで使う</button>
-</div>
-
-<div class="status-bar" id="statusBar"></div>
-
-<div class="app-header">
-  <div class="header-top">
-    <h1>週間スケジュール</h1>
-    <button class="sync-btn" onclick="syncData()">↻ 同期</button>
-  </div>
-  <div class="connection-status">
-    <span class="conn-dot" id="connDot"></span>
-    <span id="connLabel">未接続</span>
-  </div>
-</div>
-
-<div class="person-tabs" id="personTabs"></div>
-
-<div class="view-toggle">
-  <button class="view-btn active" data-view="grid" onclick="switchView('grid')">週間グリッド</button>
-  <button class="view-btn" data-view="summary" onclick="switchView('summary')">サマリー</button>
-</div>
-
-<div class="week-nav">
-  <button onclick="changeWeek(-1)">‹</button>
-  <span class="week-label" id="weekLabel"></span>
-  <button onclick="changeWeek(1)">›</button>
-</div>
-
-<div id="gridView">
-  <div class="schedule-wrapper">
-    <div class="schedule-grid" id="grid"></div>
-  </div>
-</div>
-
-<div class="summary-panel" id="summaryView"></div>
-
-<button class="fab" onclick="openModal()">＋</button>
-
-<div class="toast" id="toast"></div>
-
-<!-- Modal -->
-<div class="modal-bg" id="modalBg" onclick="closeModalOut(event)">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <h2 id="mTitle">予定を追加</h2>
-
-    <div class="fg">
-      <label>担当者</label>
-      <select id="mPerson"></select>
-    </div>
-
-    <div class="presets-label">プリセット</div>
-    <div class="preset-chips" id="presetArea"></div>
-
-    <div class="fg">
-      <label>タイトル</label>
-      <input type="text" id="mTitleIn" placeholder="例：泊夜間">
-    </div>
-
-    <div class="fg">
-      <label>曜日</label>
-      <select id="mDay">
-        <option value="1">月曜</option>
-        <option value="2">火曜</option>
-        <option value="3">水曜</option>
-        <option value="4">木曜</option>
-        <option value="5">金曜</option>
-        <option value="6">土曜</option>
-        <option value="0">日曜</option>
-      </select>
-    </div>
-
-    <div class="frow">
-      <div class="fg">
-        <label>開始</label>
-        <input type="time" id="mStart" value="09:00">
-      </div>
-      <div class="fg">
-        <label>終了</label>
-        <input type="time" id="mEnd" value="17:00">
-      </div>
-    </div>
-
-    <div class="fg">
-      <label>メモ</label>
-      <input type="text" id="mMemo" placeholder="任意メモ">
-    </div>
-
-    <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeModal()">キャンセル</button>
-      <button class="mbtn mbtn-del" id="mDel" style="display:none" onclick="deleteEv()">削除</button>
-      <button class="mbtn mbtn-save" onclick="saveEv()">保存</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ══════════════════════════════════════
-//  Config & State
-// ══════════════════════════════════════
-const PEOPLE = [
-  { name: 'Aさん', ci: 0 },
-  { name: 'Bさん', ci: 1 },
-  { name: 'Cさん', ci: 2 }
-];
-
-const PRESETS = [
-  { title:'泊夜間', day:1, s:'18:00', e:'21:00', label:'泊夜間（月18-21）' },
-  { title:'泊夜間', day:5, s:'18:00', e:'22:00', label:'泊夜間（金18-22）' },
-  { title:'就学支援センター', day:1, s:'09:30', e:'12:30', label:'就学支援（月-12:30）' },
-  { title:'就学支援センター', day:1, s:'09:30', e:'15:30', label:'就学支援（月-15:30）' },
-  { title:'就学支援センター', day:2, s:'09:30', e:'12:30', label:'就学支援（火-12:30）' },
-  { title:'就学支援センター', day:2, s:'09:30', e:'15:30', label:'就学支援（火-15:30）' },
-  { title:'就学支援センター', day:3, s:'09:30', e:'12:30', label:'就学支援（水-12:30）' },
-  { title:'就学支援センター', day:3, s:'09:30', e:'15:30', label:'就学支援（水-15:30）' },
-  { title:'豊見城高校', day:1, s:'09:00', e:'13:00', label:'豊見城高校（月9-13）' },
-  { title:'豊見城高校', day:5, s:'09:00', e:'13:00', label:'豊見城高校（金9-13）' },
-];
-
-let GAS_URL = localStorage.getItem('gasUrl') || '';
-let events = JSON.parse(localStorage.getItem('schEv3') || '[]');
-let activePerson = -1;
-let weekStart = getMonday(new Date());
-let editId = null;
-let syncing = false;
-
-const HOUR_H = 50;
-const H_START = 7;
-const H_END = 23;
-const DOW = ['日','月','火','水','木','金','土'];
-const PCOL = ['var(--p0)','var(--p1)','var(--p2)'];
-
-// ══════════════════════════════════════
-//  Setup
-// ══════════════════════════════════════
-function checkSetup() {
-  if (GAS_URL) {
-    document.getElementById('setupScreen').classList.add('hidden');
-    updateConn(true);
-    syncData();
-  } else {
-    document.getElementById('setupScreen').classList.remove('hidden');
-    updateConn(false);
-  }
-}
-
-function saveGasUrl() {
-  const url = document.getElementById('gasUrlInput').value.trim();
-  if (!url) return;
-  GAS_URL = url;
-  localStorage.setItem('gasUrl', GAS_URL);
-  document.getElementById('setupScreen').classList.add('hidden');
-  updateConn(true);
-  syncData();
-}
-
-function skipSetup() {
-  document.getElementById('setupScreen').classList.add('hidden');
-  updateConn(false);
-}
-
-function updateConn(online) {
-  const dot = document.getElementById('connDot');
-  const label = document.getElementById('connLabel');
-  if (online && GAS_URL) {
-    dot.className = 'conn-dot online';
-    label.textContent = 'Google Sheets 接続中';
-  } else {
-    dot.className = 'conn-dot offline';
-    label.textContent = 'オフライン（ローカル保存）';
-  }
-}
-
-// ══════════════════════════════════════
-//  API
-// ══════════════════════════════════════
-function setLoading(v) {
-  document.getElementById('statusBar').className = v ? 'status-bar loading' : 'status-bar';
-}
-
-function showToast(msg, type='success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `toast ${type} show`;
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-async function apiGet() {
-  if (!GAS_URL) return null;
-  setLoading(true);
-  try {
-    const r = await fetch(GAS_URL);
-    const d = await r.json();
-    setLoading(false);
-    return d;
-  } catch(e) {
-    setLoading(false);
-    console.error('GET error:', e);
-    updateConn(false);
-    return null;
-  }
-}
-
-async function apiPost(body) {
-  if (!GAS_URL) return null;
-  setLoading(true);
-  try {
-    const r = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(body)
-    });
-    const d = await r.json();
-    setLoading(false);
-    return d;
-  } catch(e) {
-    setLoading(false);
-    console.error('POST error:', e);
-    updateConn(false);
-    return null;
-  }
-}
-
-async function syncData() {
-  if (!GAS_URL || syncing) return;
-  syncing = true;
-  const data = await apiGet();
-  if (data && Array.isArray(data)) {
-    events = data;
-    saveLocal();
-    updateConn(true);
-    renderGrid();
-    renderSummary();
-    showToast('同期完了');
-  }
-  syncing = false;
-}
-
-function saveLocal() {
-  localStorage.setItem('schEv3', JSON.stringify(events));
-}
-
-// ══════════════════════════════════════
-//  Helpers
-// ══════════════════════════════════════
-function getMonday(d) {
-  const dt = new Date(d);
-  const day = dt.getDay();
-  const diff = dt.getDate() - day + (day === 0 ? -6 : 1);
-  dt.setDate(diff);
-  dt.setHours(0,0,0,0);
-  return dt;
-}
-
-function uid() {
-  return 'ev_' + Date.now() + '_' + Math.random().toString(36).slice(2,7);
-}
-
-// ══════════════════════════════════════
-//  Person Tabs
-// ══════════════════════════════════════
-function renderTabs() {
-  const c = document.getElementById('personTabs');
-  let h = `<div class="person-tab ${activePerson===-1?'active':''}" data-p="-1" onclick="setPerson(-1)">全員</div>`;
-  PEOPLE.forEach((p,i) => {
-    h += `<div class="person-tab ${activePerson===i?'active':''}" data-p="${i}" onclick="setPerson(${i})">
-      <span class="ptab-dot"></span>${p.name}
-    </div>`;
-  });
-  c.innerHTML = h;
-}
-
-function setPerson(i) {
-  activePerson = i;
-  renderTabs();
-  renderGrid();
-  renderSummary();
-}
-
-// ══════════════════════════════════════
-//  Week Nav
-// ══════════════════════════════════════
-function updateWeekLabel() {
-  const s = weekStart;
-  const e = new Date(s); e.setDate(e.getDate()+6);
-  document.getElementById('weekLabel').textContent =
-    `${s.getMonth()+1}/${s.getDate()} — ${e.getMonth()+1}/${e.getDate()}`;
-}
-
-function changeWeek(dir) {
-  weekStart.setDate(weekStart.getDate() + dir*7);
-  updateWeekLabel();
-  renderGrid();
-}
-
-// ══════════════════════════════════════
-//  Grid
-// ══════════════════════════════════════
-function renderGrid() {
-  const g = document.getElementById('grid');
-  const totalH = (H_END - H_START) * HOUR_H;
-  const today = new Date();
-
-  let h = `<div class="corner-header"></div>`;
-
-  for (let d = 0; d < 7; d++) {
-    const dt = new Date(weekStart);
-    dt.setDate(dt.getDate()+d);
-    const isToday = dt.toDateString() === today.toDateString();
-    const dow = dt.getDay();
-    const cls = isToday?'today':(dow===0?'sun':(dow===6?'sat':''));
-    h += `<div class="day-header ${cls}">
-      <div class="dow">${DOW[dow]}</div>
-      <div class="dnum">${dt.getDate()}</div>
-    </div>`;
-  }
-
-  // Time col
-  h += `<div class="time-col" style="height:${totalH}px">`;
-  for (let hr = H_START; hr <= H_END; hr++) {
-    h += `<div class="time-label" style="top:${(hr-H_START)*HOUR_H}px">${hr}:00</div>`;
-  }
-  h += `</div>`;
-
-  // Day cols
-  for (let d = 0; d < 7; d++) {
-    const dt = new Date(weekStart);
-    dt.setDate(dt.getDate()+d);
-    const dow = dt.getDay();
-
-    h += `<div class="day-col" style="height:${totalH}px">`;
-
-    for (let hr = H_START; hr <= H_END; hr++) {
-      const t = (hr-H_START)*HOUR_H;
-      h += `<div class="h-line" style="top:${t}px"></div>`;
-      if (hr < H_END) h += `<div class="hh-line" style="top:${t+HOUR_H/2}px"></div>`;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2026 シフト管理</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    if (dt.toDateString() === today.toDateString()) {
-      const nm = today.getHours()*60+today.getMinutes();
-      const sm = H_START*60;
-      if (nm >= sm && nm <= H_END*60) {
-        h += `<div class="now-line" style="top:${((nm-sm)/60)*HOUR_H}px"></div>`;
+    :root {
+      --bg: #0c0e14;
+      --surface: #151821;
+      --surface2: #1c2030;
+      --surface3: #242838;
+      --border: #262a3a;
+      --border-light: #2f3448;
+      --text: #e4e6ee;
+      --text-dim: #7a7f94;
+      --text-muted: #50546a;
+      --p0: #ff7eb3;
+      --p0-bg: rgba(255, 126, 179, 0.10);
+      --p0-glow: rgba(255, 126, 179, 0.25);
+      --p1: #7ec8e3;
+      --p1-bg: rgba(126, 200, 227, 0.10);
+      --p1-glow: rgba(126, 200, 227, 0.25);
+      --p2: #c4e97c;
+      --p2-bg: rgba(196, 233, 124, 0.10);
+      --p2-glow: rgba(196, 233, 124, 0.25);
+      --accent: #7ec8e3;
+      --danger: #ff6b6b;
+      --success: #6bcb77;
+      --warn: #ffd93d;
+      --radius: 8px;
+      --hour-h: 50px;
+    }
+
+    html {
+      font-size: 14px;
+    }
+
+    body {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      overflow-x: hidden;
+    }
+
+    /* ── Status Bar ── */
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .status-bar.loading {
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 1.2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0
+      }
+
+      100% {
+        background-position: 200% 0
       }
     }
 
-    const dayEvs = events.filter(ev => {
-      if (activePerson !== -1 && ev.person !== activePerson) return false;
-      return ev.day === dow;
-    });
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      z-index: 300;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      white-space: nowrap;
+    }
 
-    dayEvs.forEach(ev => {
-      const [sh,sm] = ev.start.split(':').map(Number);
-      const [eh,em] = ev.end.split(':').map(Number);
-      const sMin = sh*60+sm, eMin = eh*60+em;
-      const top = ((sMin - H_START*60)/60)*HOUR_H;
-      const height = ((eMin-sMin)/60)*HOUR_H;
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
-      h += `<div class="ev p${ev.person}" style="top:${top}px;height:${height}px" onclick="openEdit('${ev.id}')">
-        <div class="ev-t">${ev.title}</div>
-        <div class="ev-time">${ev.start}–${ev.end}</div>
-        ${ev.memo ? `<div class="ev-memo">${ev.memo}</div>` : ''}
-      </div>`;
-    });
+    .toast.success {
+      background: rgba(107, 203, 119, 0.2);
+      color: var(--success);
+      border: 1px solid rgba(107, 203, 119, 0.3);
+    }
 
-    h += `</div>`;
-  }
+    .toast.error {
+      background: rgba(255, 107, 107, 0.2);
+      color: var(--danger);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+    }
 
-  g.innerHTML = h;
-}
+    .toast.warn {
+      background: rgba(255, 217, 61, 0.2);
+      color: var(--warn);
+      border: 1px solid rgba(255, 217, 61, 0.3);
+    }
 
-// ══════════════════════════════════════
-//  Summary
-// ══════════════════════════════════════
-function renderSummary() {
-  const p = document.getElementById('summaryView');
-  let h = '';
+    /* ── Header ── */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(12, 14, 20, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 16px 10px;
+    }
 
-  PEOPLE.forEach((person, pi) => {
-    if (activePerson !== -1 && activePerson !== pi) return;
-    const pevs = events.filter(e => e.person === pi);
-    const byDay = {};
-    pevs.forEach(ev => { (byDay[ev.day] = byDay[ev.day]||[]).push(ev); });
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-    let totalMin = 0, rows = '';
-    [1,2,3,4,5,6,0].forEach(d => {
-      if (!byDay[d]) return;
-      byDay[d].forEach(ev => {
-        const [sh,sm] = ev.start.split(':').map(Number);
-        const [eh,em] = ev.end.split(':').map(Number);
-        const dur = (eh*60+em)-(sh*60+sm);
-        totalMin += dur;
-        rows += `<div class="sum-row">
-          <span class="sum-day">${DOW[d]}</span>
-          <span>${ev.title}</span>
-          <span class="sum-time">${ev.start}–${ev.end}</span>
-          <span class="sum-dur">${Math.floor(dur/60)}h${dur%60>0?dur%60+'m':''}</span>
-        </div>`;
+    .app-header h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      background: linear-gradient(135deg, var(--p0), var(--p1), var(--p2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-btns {
+      display: flex;
+      gap: 6px;
+    }
+
+    .hbtn {
+      padding: 5px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .hbtn:active {
+      transform: scale(0.94);
+    }
+
+    .hbtn.authed {
+      border-color: var(--success);
+      color: var(--success);
+      background: rgba(107, 203, 119, 0.08);
+    }
+
+    .connection-status {
+      font-size: 0.65rem;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-muted);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .conn-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-muted);
+    }
+
+    .conn-dot.online {
+      background: var(--success);
+      box-shadow: 0 0 6px rgba(107, 203, 119, 0.5);
+    }
+
+    .conn-dot.offline {
+      background: var(--danger);
+    }
+
+    /* ── Person Tabs ── */
+    .person-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 16px 6px;
+    }
+
+    .person-tab {
+      flex: 1;
+      padding: 9px 4px;
+      border-radius: var(--radius);
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: inherit;
+    }
+
+    .person-tab:active {
+      transform: scale(0.97);
+    }
+
+    .ptab-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 3px;
+      vertical-align: middle;
+    }
+
+    .person-tab[data-p="0"] .ptab-dot {
+      background: var(--p0);
+    }
+
+    .person-tab[data-p="1"] .ptab-dot {
+      background: var(--p1);
+    }
+
+    .person-tab[data-p="2"] .ptab-dot {
+      background: var(--p2);
+    }
+
+    .person-tab[data-p="-1"].active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(126, 200, 227, 0.08);
+    }
+
+    .person-tab[data-p="0"].active {
+      border-color: var(--p0);
+      color: var(--p0);
+      background: var(--p0-bg);
+      box-shadow: 0 0 14px var(--p0-glow);
+    }
+
+    .person-tab[data-p="1"].active {
+      border-color: var(--p1);
+      color: var(--p1);
+      background: var(--p1-bg);
+      box-shadow: 0 0 14px var(--p1-glow);
+    }
+
+    .person-tab[data-p="2"].active {
+      border-color: var(--p2);
+      color: var(--p2);
+      background: var(--p2-bg);
+      box-shadow: 0 0 14px var(--p2-glow);
+    }
+
+    /* ── View Toggle ── */
+    .view-toggle {
+      display: flex;
+      gap: 0;
+      padding: 6px 16px 4px;
+    }
+
+    .view-btn {
+      flex: 1;
+      padding: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .view-btn:first-child {
+      border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    .view-btn:last-child {
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+
+    .view-btn:not(:first-child) {
+      border-left: none;
+    }
+
+    .view-btn.active {
+      background: rgba(126, 200, 227, 0.08);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── Week Nav ── */
+    .week-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 10px;
+    }
+
+    .week-nav button {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .week-nav button:active {
+      transform: scale(0.9);
+      background: var(--surface2);
+    }
+
+    .week-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    /* ── Schedule Grid ── */
+    .schedule-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 0 90px;
+      scrollbar-width: none;
+    }
+
+    .schedule-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 40px repeat(7, minmax(96px, 1fr));
+      min-width: 720px;
+      position: relative;
+    }
+
+    .corner-header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 11;
+      background: rgba(12, 14, 20, 0.95);
+    }
+
+    .day-header {
+      text-align: center;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(12, 14, 20, 0.95);
+      backdrop-filter: blur(8px);
+    }
+
+    .day-header .dow {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .day-header .dnum {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-top: 2px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .day-header.today .dnum {
+      background: var(--p0);
+      color: var(--bg);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .day-header.sun {
+      color: #ff8a8a;
+    }
+
+    .day-header.sat {
+      color: #8ab4f8;
+    }
+
+    .time-col {
+      position: relative;
+    }
+
+    .time-label {
+      position: absolute;
+      right: 4px;
+      font-size: 0.58rem;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--text-muted);
+      transform: translateY(-50%);
+      line-height: 1;
+    }
+
+    .day-col {
+      position: relative;
+      border-left: 1px solid var(--border);
+    }
+
+    .h-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .hh-line {
+      position: absolute;
+      left: 20%;
+      right: 0;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* ── Event Blocks ── */
+    .ev {
+      position: absolute;
+      left: 3px;
+      right: 3px;
+      border-radius: 5px;
+      padding: 4px 6px;
+      font-size: 0.66rem;
+      font-weight: 500;
+      line-height: 1.3;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.12s;
+      z-index: 5;
+      border-left: 3px solid;
+    }
+
+    .ev:active {
+      transform: scale(0.97);
+    }
+
+    .ev-t {
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ev-time {
+      font-size: 0.56rem;
+      opacity: 0.65;
+      margin-top: 1px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .ev-memo {
+      font-size: 0.54rem;
+      opacity: 0.5;
+      margin-top: 1px;
+    }
+
+    .ev.p0 {
+      background: var(--p0-bg);
+      border-left-color: var(--p0);
+      color: var(--p0);
+    }
+
+    .ev.p1 {
+      background: var(--p1-bg);
+      border-left-color: var(--p1);
+      color: var(--p1);
+    }
+
+    .ev.p2 {
+      background: var(--p2-bg);
+      border-left-color: var(--p2);
+      color: var(--p2);
+    }
+
+    .now-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--p0);
+      z-index: 8;
+      box-shadow: 0 0 10px var(--p0-glow);
+    }
+
+    .now-line::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: -3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p0);
+    }
+
+    /* ── Summary ── */
+    .summary-panel {
+      padding: 16px;
+      display: none;
+    }
+
+    .summary-panel.show {
+      display: block;
+    }
+
+    .sum-card {
+      background: var(--surface);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+
+    .sum-card h3 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sum-card h3 .sdot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .sum-row {
+      display: grid;
+      grid-template-columns: 32px 1fr 80px 60px;
+      align-items: center;
+      padding: 6px 0;
+      font-size: 0.73rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .sum-row:last-child {
+      border-bottom: none;
+    }
+
+    .sum-day {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .sum-time {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--text-dim);
+    }
+
+    .sum-dur {
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* ── Modal ── */
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-bg.show {
+      display: flex;
+      animation: fadeIn 0.2s;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%)
+      }
+
+      to {
+        transform: translateY(0)
+      }
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 18px 18px 0 0;
+      width: 100%;
+      max-width: 480px;
+      max-height: 88dvh;
+      overflow-y: auto;
+      padding: 20px 20px 28px;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
+
+    .modal h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .fg {
+      margin-bottom: 14px;
+    }
+
+    .fg label {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .fg input,
+    .fg select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .fg input:focus,
+    .fg select:focus {
+      border-color: var(--accent);
+    }
+
+    .frow {
+      display: flex;
+      gap: 10px;
+    }
+
+    .frow .fg {
+      flex: 1;
+    }
+
+    .presets-label {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 14px;
+    }
+
+    .pchip {
+      padding: 5px 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-dim);
+      font-size: 0.66rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .pchip:active {
+      transform: scale(0.95);
+    }
+
+    .pchip.on {
+      border-color: var(--accent);
+      background: rgba(126, 200, 227, 0.1);
+      color: var(--accent);
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .mbtn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .mbtn:active {
+      transform: scale(0.97);
+    }
+
+    .mbtn-save {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .mbtn-cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    .mbtn-del {
+      min-width: 56px;
+      flex: 0;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.25);
+      color: var(--danger);
+    }
+
+    /* ── Password Modal ── */
+    .pw-modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 250;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pw-modal-bg.show {
+      display: flex;
+      animation: fadeIn 0.2s;
+    }
+
+    .pw-modal {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 28px 24px;
+      width: 90%;
+      max-width: 340px;
+      text-align: center;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .pw-modal h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .pw-modal p {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .pw-modal input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: 'IBM Plex Mono', monospace;
+      text-align: center;
+      outline: none;
+      letter-spacing: 0.15em;
+    }
+
+    .pw-modal input:focus {
+      border-color: var(--accent);
+    }
+
+    .pw-modal .pw-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .pw-modal .pw-btns button {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      border: none;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .pw-ok {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    .pw-cancel {
+      background: transparent;
+      border: 1px solid var(--border) !important;
+      color: var(--text-dim);
+    }
+
+    .pw-error {
+      color: var(--danger);
+      font-size: 0.7rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* ── Setup Screen ── */
+    .setup-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .setup-screen.hidden {
+      display: none;
+    }
+
+    .setup-screen h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--p0), var(--p1));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .setup-screen p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .setup-screen input {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-family: 'IBM Plex Mono', monospace;
+      outline: none;
+      margin-bottom: 14px;
+    }
+
+    .setup-screen input:focus {
+      border-color: var(--accent);
+    }
+
+    .setup-screen button {
+      padding: 12px 32px;
+      border-radius: 10px;
+      border: none;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .setup-screen .skip-btn {
+      margin-top: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.75rem;
+    }
+
+    /* ── FAB ── */
+    .fab {
+      position: fixed;
+      bottom: 28px;
+      right: 20px;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p1), var(--p2));
+      color: var(--bg);
+      border: none;
+      font-size: 1.6rem;
+      font-weight: 300;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(126, 200, 227, 0.35);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .fab:active {
+      transform: scale(0.88);
+    }
+
+    /* ── Lock icon ── */
+    .lock-badge {
+      display: inline-block;
+      font-size: 0.6rem;
+      margin-left: 6px;
+      padding: 2px 6px;
+      border-radius: 10px;
+      background: rgba(255, 217, 61, 0.15);
+      color: var(--warn);
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Setup -->
+  <div class="setup-screen" id="setupScreen">
+    <h2>初期設定</h2>
+    <p>Google Apps ScriptのデプロイURLを<br>貼り付けてください</p>
+    <input type="text" id="gasUrlInput" placeholder="https://script.google.com/macros/s/...">
+    <button onclick="saveGasUrl()">接続する</button>
+    <button class="skip-btn" onclick="skipSetup()">オフラインで使う</button>
+  </div>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <div class="app-header">
+    <div class="header-top">
+      <div>
+        <h1>2026 シフト管理</h1>
+        <div class="connection-status">
+          <span class="conn-dot" id="connDot"></span>
+          <span id="connLabel">未接続</span>
+        </div>
+      </div>
+      <div class="header-btns">
+        <button class="hbtn" id="authBtn" onclick="openPwModal('login')">🔒 ログイン</button>
+        <button class="hbtn" onclick="syncData()">↻ 同期</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="person-tabs" id="personTabs"></div>
+
+  <div class="view-toggle">
+    <button class="view-btn active" data-view="grid" onclick="switchView('grid')">週間グリッド</button>
+    <button class="view-btn" data-view="summary" onclick="switchView('summary')">サマリー</button>
+  </div>
+
+  <div class="week-nav">
+    <button onclick="changeWeek(-1)">‹</button>
+    <span class="week-label" id="weekLabel"></span>
+    <button onclick="changeWeek(1)">›</button>
+  </div>
+
+  <div id="gridView">
+    <div class="schedule-wrapper">
+      <div class="schedule-grid" id="grid"></div>
+    </div>
+  </div>
+
+  <div class="summary-panel" id="summaryView"></div>
+
+  <button class="fab" onclick="handleFab()">＋</button>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Event Modal -->
+  <div class="modal-bg" id="modalBg" onclick="closeModalOut(event)">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <h2 id="mTitle">予定を追加</h2>
+      <div class="fg">
+        <label>担当者</label>
+        <select id="mPerson"></select>
+      </div>
+      <div class="presets-label">プリセット</div>
+      <div class="preset-chips" id="presetArea"></div>
+      <div class="fg">
+        <label>タイトル</label>
+        <input type="text" id="mTitleIn" placeholder="例：泊夜間">
+      </div>
+      <div class="fg">
+        <label>曜日</label>
+        <select id="mDay">
+          <option value="1">月曜</option>
+          <option value="2">火曜</option>
+          <option value="3">水曜</option>
+          <option value="4">木曜</option>
+          <option value="5">金曜</option>
+          <option value="6">土曜</option>
+          <option value="0">日曜</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>開始</label><input type="time" id="mStart" value="09:00"></div>
+        <div class="fg"><label>終了</label><input type="time" id="mEnd" value="17:00"></div>
+      </div>
+      <div class="fg">
+        <label>メモ</label>
+        <input type="text" id="mMemo" placeholder="任意メモ">
+      </div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeModal()">キャンセル</button>
+        <button class="mbtn mbtn-del" id="mDel" style="display:none" onclick="deleteEv()">削除</button>
+        <button class="mbtn mbtn-save" onclick="saveEv()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Modal -->
+  <div class="pw-modal-bg" id="pwModalBg">
+    <div class="pw-modal">
+      <h3 id="pwTitle">🔐 管理者ログイン</h3>
+      <p id="pwDesc">編集にはパスワードが必要です</p>
+      <input type="password" id="pwInput" placeholder="パスワード" autocomplete="off">
+      <div class="pw-error" id="pwError">パスワードが違います</div>
+      <div class="pw-btns">
+        <button class="pw-cancel" onclick="closePwModal()">キャンセル</button>
+        <button class="pw-ok" onclick="submitPw()">確認</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ══════════════════════════════════════
+    //  Config
+    // ══════════════════════════════════════
+    const PEOPLE = [
+      { name: 'Aさん', ci: 0 },
+      { name: 'Bさん', ci: 1 },
+      { name: 'Cさん', ci: 2 }
+    ];
+
+    const PRESETS = [
+      { title: '泊夜間', day: 1, s: '18:00', e: '21:00', label: '泊夜間（月18-21）' },
+      { title: '泊夜間', day: 5, s: '18:00', e: '22:00', label: '泊夜間（金18-22）' },
+      { title: '就学支援センター', day: 1, s: '09:30', e: '12:30', label: '就学支援（月-12:30）' },
+      { title: '就学支援センター', day: 1, s: '09:30', e: '15:30', label: '就学支援（月-15:30）' },
+      { title: '就学支援センター', day: 2, s: '09:30', e: '12:30', label: '就学支援（火-12:30）' },
+      { title: '就学支援センター', day: 2, s: '09:30', e: '15:30', label: '就学支援（火-15:30）' },
+      { title: '就学支援センター', day: 3, s: '09:30', e: '12:30', label: '就学支援（水-12:30）' },
+      { title: '就学支援センター', day: 3, s: '09:30', e: '15:30', label: '就学支援（水-15:30）' },
+      { title: '豊見城高校', day: 1, s: '09:00', e: '13:00', label: '豊見城高校（月9-13）' },
+      { title: '豊見城高校', day: 5, s: '09:00', e: '13:00', label: '豊見城高校（金9-13）' },
+    ];
+
+    let GAS_URL = localStorage.getItem('gasUrl') || '';
+    let events = JSON.parse(localStorage.getItem('schEv3') || '[]');
+    let activePerson = -1;
+    let weekStart = getMonday(new Date());
+    let editId = null;
+    let syncing = false;
+    let adminPw = sessionStorage.getItem('adminPw') || '';
+    let pwCallback = null;
+
+    const HOUR_H = 50;
+    const H_START = 7;
+    const H_END = 23;
+    const DOW = ['日', '月', '火', '水', '木', '金', '土'];
+    const PCOL = ['var(--p0)', 'var(--p1)', 'var(--p2)'];
+
+    // ══════════════════════════════════════
+    //  Helpers
+    // ══════════════════════════════════════
+    function getMonday(d) {
+      const dt = new Date(d);
+      const day = dt.getDay();
+      dt.setDate(dt.getDate() - day + (day === 0 ? -6 : 1));
+      dt.setHours(0, 0, 0, 0);
+      return dt;
+    }
+    function uid() { return 'ev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
+    function fmtTime(val) {
+      if (!val) return '';
+      const s = String(val);
+      // Handle ISO date strings from GAS
+      const isoMatch = s.match(/T(\d{2}):(\d{2})/);
+      if (isoMatch) return isoMatch[1] + ':' + isoMatch[2];
+      // Handle "HH:mm" or "H:mm"
+      const m = s.match(/^(\d{1,2}):(\d{2})/);
+      if (m) return m[1].padStart(2, '0') + ':' + m[2];
+      return s;
+    }
+
+    // ══════════════════════════════════════
+    //  Setup & Connection
+    // ══════════════════════════════════════
+    function checkSetup() {
+      if (GAS_URL) {
+        document.getElementById('setupScreen').classList.add('hidden');
+        updateConn(true);
+        syncData();
+      } else {
+        document.getElementById('setupScreen').classList.remove('hidden');
+        updateConn(false);
+      }
+    }
+    function saveGasUrl() {
+      const url = document.getElementById('gasUrlInput').value.trim();
+      if (!url) return;
+      GAS_URL = url;
+      localStorage.setItem('gasUrl', GAS_URL);
+      document.getElementById('setupScreen').classList.add('hidden');
+      updateConn(true);
+      syncData();
+    }
+    function skipSetup() {
+      document.getElementById('setupScreen').classList.add('hidden');
+      updateConn(false);
+    }
+    function updateConn(on) {
+      document.getElementById('connDot').className = 'conn-dot ' + (on && GAS_URL ? 'online' : 'offline');
+      document.getElementById('connLabel').textContent = on && GAS_URL ? 'Google Sheets 接続中' : 'オフライン';
+    }
+
+    // ══════════════════════════════════════
+    //  Auth
+    // ══════════════════════════════════════
+    function isAuthed() { return !!adminPw; }
+
+    function updateAuthBtn() {
+      const btn = document.getElementById('authBtn');
+      if (isAuthed()) {
+        btn.textContent = '🔓 編集モード';
+        btn.classList.add('authed');
+      } else {
+        btn.textContent = '🔒 ログイン';
+        btn.classList.remove('authed');
+      }
+    }
+
+    function openPwModal(purpose) {
+      if (purpose === 'login' && isAuthed()) {
+        // ログアウト
+        adminPw = '';
+        sessionStorage.removeItem('adminPw');
+        updateAuthBtn();
+        showToast('閲覧モードに戻りました', 'warn');
+        return;
+      }
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwError').style.display = 'none';
+      if (purpose === 'login') {
+        document.getElementById('pwTitle').textContent = '🔐 管理者ログイン';
+        document.getElementById('pwDesc').textContent = '編集にはパスワードが必要です';
+        pwCallback = () => {
+          showToast('ログインしました', 'success');
+        };
+      } else {
+        document.getElementById('pwTitle').textContent = '🔐 認証';
+        document.getElementById('pwDesc').textContent = 'この操作にはパスワードが必要です';
+        pwCallback = purpose;
+      }
+      document.getElementById('pwModalBg').classList.add('show');
+      setTimeout(() => document.getElementById('pwInput').focus(), 100);
+    }
+
+    function closePwModal() {
+      document.getElementById('pwModalBg').classList.remove('show');
+      pwCallback = null;
+    }
+
+    function submitPw() {
+      const pw = document.getElementById('pwInput').value;
+      if (!pw) return;
+      adminPw = pw;
+      sessionStorage.setItem('adminPw', pw);
+      updateAuthBtn();
+      closePwModal();
+      if (typeof pwCallback === 'function') pwCallback();
+    }
+
+    // Enter key support
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('pwInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitPw();
       });
     });
 
-    const th = Math.floor(totalMin/60), tm = totalMin%60;
-    h += `<div class="sum-card">
-      <h3><span class="sdot" style="background:${PCOL[pi]}"></span>${person.name}
-        <span style="margin-left:auto;font-size:0.74rem;font-family:'IBM Plex Mono',monospace;color:${PCOL[pi]}">
-          週計 ${th}h${tm>0?tm+'m':''}
-        </span>
-      </h3>
-      ${rows || '<div style="font-size:0.74rem;color:var(--text-muted);padding:8px 0">予定なし</div>'}
-    </div>`;
-  });
+    // ══════════════════════════════════════
+    //  API
+    // ══════════════════════════════════════
+    function setLoading(v) { document.getElementById('statusBar').className = v ? 'status-bar loading' : 'status-bar'; }
 
-  p.innerHTML = h;
-}
+    function showToast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
 
-// ══════════════════════════════════════
-//  View Switch
-// ══════════════════════════════════════
-function switchView(v) {
-  document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view===v));
-  document.getElementById('gridView').style.display = v==='grid'?'block':'none';
-  document.getElementById('summaryView').classList.toggle('show', v==='summary');
-  if (v==='summary') renderSummary();
-}
+    async function apiGet() {
+      if (!GAS_URL) return null;
+      setLoading(true);
+      try {
+        const r = await fetch(GAS_URL);
+        const d = await r.json();
+        setLoading(false);
+        return d;
+      } catch (e) {
+        setLoading(false);
+        updateConn(false);
+        return null;
+      }
+    }
 
-// ══════════════════════════════════════
-//  Modal
-// ══════════════════════════════════════
-function renderPresets() {
-  document.getElementById('presetArea').innerHTML = PRESETS.map((p,i) =>
-    `<button class="pchip" onclick="applyPreset(${i})">${p.label}</button>`
-  ).join('');
-}
+    async function apiPost(body) {
+      if (!GAS_URL) return null;
+      setLoading(true);
+      try {
+        const r = await fetch(GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify({ ...body, password: adminPw })
+        });
+        const d = await r.json();
+        setLoading(false);
+        if (d.error === 'auth_failed') {
+          adminPw = '';
+          sessionStorage.removeItem('adminPw');
+          updateAuthBtn();
+          showToast('パスワードが違います', 'error');
+          return null;
+        }
+        return d;
+      } catch (e) {
+        setLoading(false);
+        updateConn(false);
+        return null;
+      }
+    }
 
-function applyPreset(i) {
-  const p = PRESETS[i];
-  document.getElementById('mTitleIn').value = p.title;
-  document.getElementById('mDay').value = String(p.day);
-  document.getElementById('mStart').value = p.s;
-  document.getElementById('mEnd').value = p.e;
-  document.querySelectorAll('.pchip').forEach((c,j) => c.classList.toggle('on', j===i));
-}
+    async function syncData() {
+      if (!GAS_URL || syncing) return;
+      syncing = true;
+      const data = await apiGet();
+      if (data && Array.isArray(data)) {
+        // 時刻を正規化
+        events = data.map(ev => ({
+          ...ev,
+          start: fmtTime(ev.start),
+          end: fmtTime(ev.end),
+          person: Number(ev.person),
+          day: Number(ev.day)
+        }));
+        saveLocal();
+        updateConn(true);
+        renderGrid();
+        renderSummary();
+        showToast('同期完了');
+      }
+      syncing = false;
+    }
 
-function renderPersonSel() {
-  document.getElementById('mPerson').innerHTML =
-    PEOPLE.map((p,i) => `<option value="${i}">${p.name}</option>`).join('');
-}
+    function saveLocal() { localStorage.setItem('schEv3', JSON.stringify(events)); }
 
-function openModal() {
-  editId = null;
-  document.getElementById('mTitle').textContent = '予定を追加';
-  document.getElementById('mPerson').value = activePerson===-1?'0':String(activePerson);
-  document.getElementById('mTitleIn').value = '';
-  document.getElementById('mDay').value = '1';
-  document.getElementById('mStart').value = '09:00';
-  document.getElementById('mEnd').value = '17:00';
-  document.getElementById('mMemo').value = '';
-  document.getElementById('mDel').style.display = 'none';
-  document.querySelectorAll('.pchip').forEach(c => c.classList.remove('on'));
-  document.getElementById('modalBg').classList.add('show');
-}
+    // ══════════════════════════════════════
+    //  Tabs, Week, Views
+    // ══════════════════════════════════════
+    function renderTabs() {
+      const c = document.getElementById('personTabs');
+      let h = `<div class="person-tab ${activePerson === -1 ? 'active' : ''}" data-p="-1" onclick="setPerson(-1)">全員</div>`;
+      PEOPLE.forEach((p, i) => {
+        h += `<div class="person-tab ${activePerson === i ? 'active' : ''}" data-p="${i}" onclick="setPerson(${i})">
+      <span class="ptab-dot"></span>${p.name}</div>`;
+      });
+      c.innerHTML = h;
+    }
+    function setPerson(i) { activePerson = i; renderTabs(); renderGrid(); renderSummary(); }
 
-function openEdit(id) {
-  const ev = events.find(e => e.id === id);
-  if (!ev) return;
-  editId = id;
-  document.getElementById('mTitle').textContent = '予定を編集';
-  document.getElementById('mPerson').value = String(ev.person);
-  document.getElementById('mTitleIn').value = ev.title;
-  document.getElementById('mDay').value = String(ev.day);
-  document.getElementById('mStart').value = ev.start;
-  document.getElementById('mEnd').value = ev.end;
-  document.getElementById('mMemo').value = ev.memo || '';
-  document.getElementById('mDel').style.display = 'block';
-  document.querySelectorAll('.pchip').forEach(c => c.classList.remove('on'));
-  document.getElementById('modalBg').classList.add('show');
-}
+    function updateWeekLabel() {
+      const s = weekStart, e = new Date(s); e.setDate(e.getDate() + 6);
+      document.getElementById('weekLabel').textContent = `${s.getMonth() + 1}/${s.getDate()} — ${e.getMonth() + 1}/${e.getDate()}`;
+    }
+    function changeWeek(dir) { weekStart.setDate(weekStart.getDate() + dir * 7); updateWeekLabel(); renderGrid(); }
 
-function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
-function closeModalOut(e) { if (e.target===e.currentTarget) closeModal(); }
+    function switchView(v) {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+      document.getElementById('gridView').style.display = v === 'grid' ? 'block' : 'none';
+      document.getElementById('summaryView').classList.toggle('show', v === 'summary');
+      if (v === 'summary') renderSummary();
+    }
 
-async function saveEv() {
-  const person = parseInt(document.getElementById('mPerson').value);
-  const title = document.getElementById('mTitleIn').value.trim();
-  const day = parseInt(document.getElementById('mDay').value);
-  const start = document.getElementById('mStart').value;
-  const end = document.getElementById('mEnd').value;
-  const memo = document.getElementById('mMemo').value.trim();
+    // ══════════════════════════════════════
+    //  Grid Render
+    // ══════════════════════════════════════
+    function renderGrid() {
+      const g = document.getElementById('grid');
+      const totalH = (H_END - H_START) * HOUR_H;
+      const today = new Date();
+      let h = `<div class="corner-header"></div>`;
 
-  if (!title) { showToast('タイトルを入力してください','error'); return; }
-  if (start >= end) { showToast('終了時間が開始より前です','error'); return; }
+      for (let d = 0; d < 7; d++) {
+        const dt = new Date(weekStart); dt.setDate(dt.getDate() + d);
+        const dow = dt.getDay();
+        const cls = dt.toDateString() === today.toDateString() ? 'today' : (dow === 0 ? 'sun' : (dow === 6 ? 'sat' : ''));
+        h += `<div class="day-header ${cls}"><div class="dow">${DOW[dow]}</div><div class="dnum">${dt.getDate()}</div></div>`;
+      }
 
-  if (editId) {
-    const idx = events.findIndex(e => e.id === editId);
-    if (idx !== -1) {
-      events[idx] = { ...events[idx], person, title, day, start, end, memo };
-      saveLocal();
-      closeModal();
+      h += `<div class="time-col" style="height:${totalH}px">`;
+      for (let hr = H_START; hr <= H_END; hr++) h += `<div class="time-label" style="top:${(hr - H_START) * HOUR_H}px">${hr}:00</div>`;
+      h += `</div>`;
+
+      for (let d = 0; d < 7; d++) {
+        const dt = new Date(weekStart); dt.setDate(dt.getDate() + d);
+        const dow = dt.getDay();
+        h += `<div class="day-col" style="height:${totalH}px">`;
+        for (let hr = H_START; hr <= H_END; hr++) {
+          const t = (hr - H_START) * HOUR_H;
+          h += `<div class="h-line" style="top:${t}px"></div>`;
+          if (hr < H_END) h += `<div class="hh-line" style="top:${t + HOUR_H / 2}px"></div>`;
+        }
+        if (dt.toDateString() === today.toDateString()) {
+          const nm = today.getHours() * 60 + today.getMinutes(), sm = H_START * 60;
+          if (nm >= sm && nm <= H_END * 60) h += `<div class="now-line" style="top:${((nm - sm) / 60) * HOUR_H}px"></div>`;
+        }
+
+        events.filter(ev => {
+          if (activePerson !== -1 && ev.person !== activePerson) return false;
+          return ev.day === dow;
+        }).forEach(ev => {
+          const st = fmtTime(ev.start), en = fmtTime(ev.end);
+          const [sh, sm] = st.split(':').map(Number);
+          const [eh, em] = en.split(':').map(Number);
+          const sMin = sh * 60 + sm, eMin = eh * 60 + em;
+          const top = ((sMin - H_START * 60) / 60) * HOUR_H;
+          const height = ((eMin - sMin) / 60) * HOUR_H;
+          h += `<div class="ev p${ev.person}" style="top:${top}px;height:${height}px" onclick="handleEvClick('${ev.id}')">
+        <div class="ev-t">${ev.title}</div>
+        <div class="ev-time">${st}–${en}</div>
+        ${ev.memo ? `<div class="ev-memo">${ev.memo}</div>` : ''}
+      </div>`;
+        });
+        h += `</div>`;
+      }
+      g.innerHTML = h;
+    }
+
+    // ══════════════════════════════════════
+    //  Summary
+    // ══════════════════════════════════════
+    function renderSummary() {
+      const p = document.getElementById('summaryView');
+      let h = '';
+      PEOPLE.forEach((person, pi) => {
+        if (activePerson !== -1 && activePerson !== pi) return;
+        const pevs = events.filter(e => e.person === pi);
+        const byDay = {};
+        pevs.forEach(ev => { (byDay[ev.day] = byDay[ev.day] || []).push(ev); });
+        let totalMin = 0, rows = '';
+        [1, 2, 3, 4, 5, 6, 0].forEach(d => {
+          if (!byDay[d]) return;
+          byDay[d].forEach(ev => {
+            const st = fmtTime(ev.start), en = fmtTime(ev.end);
+            const [sh, sm] = st.split(':').map(Number);
+            const [eh, em] = en.split(':').map(Number);
+            const dur = (eh * 60 + em) - (sh * 60 + sm);
+            totalMin += dur;
+            rows += `<div class="sum-row">
+          <span class="sum-day">${DOW[d]}</span><span>${ev.title}</span>
+          <span class="sum-time">${st}–${en}</span>
+          <span class="sum-dur">${Math.floor(dur / 60)}h${dur % 60 > 0 ? dur % 60 + 'm' : ''}</span>
+        </div>`;
+          });
+        });
+        const th = Math.floor(totalMin / 60), tm = totalMin % 60;
+        h += `<div class="sum-card"><h3><span class="sdot" style="background:${PCOL[pi]}"></span>${person.name}
+      <span style="margin-left:auto;font-size:0.74rem;font-family:'IBM Plex Mono',monospace;color:${PCOL[pi]}">週計 ${th}h${tm > 0 ? tm + 'm' : ''}</span>
+    </h3>${rows || '<div style="font-size:0.74rem;color:var(--text-muted);padding:8px 0">予定なし</div>'}</div>`;
+      });
+      p.innerHTML = h;
+    }
+
+    // ══════════════════════════════════════
+    //  Modal (Add/Edit)
+    // ══════════════════════════════════════
+    function renderPresets() {
+      document.getElementById('presetArea').innerHTML = PRESETS.map((p, i) =>
+        `<button class="pchip" onclick="applyPreset(${i})">${p.label}</button>`).join('');
+    }
+    function applyPreset(i) {
+      const p = PRESETS[i];
+      document.getElementById('mTitleIn').value = p.title;
+      document.getElementById('mDay').value = String(p.day);
+      document.getElementById('mStart').value = p.s;
+      document.getElementById('mEnd').value = p.e;
+      document.querySelectorAll('.pchip').forEach((c, j) => c.classList.toggle('on', j === i));
+    }
+    function renderPersonSel() {
+      document.getElementById('mPerson').innerHTML = PEOPLE.map((p, i) => `<option value="${i}">${p.name}</option>`).join('');
+    }
+
+    function handleFab() {
+      if (!isAuthed()) {
+        openPwModal(() => openModal());
+        return;
+      }
+      openModal();
+    }
+
+    function handleEvClick(id) {
+      if (!isAuthed()) {
+        openPwModal(() => openEdit(id));
+        return;
+      }
+      openEdit(id);
+    }
+
+    function openModal() {
+      editId = null;
+      document.getElementById('mTitle').textContent = '予定を追加';
+      document.getElementById('mPerson').value = activePerson === -1 ? '0' : String(activePerson);
+      document.getElementById('mTitleIn').value = '';
+      document.getElementById('mDay').value = '1';
+      document.getElementById('mStart').value = '09:00';
+      document.getElementById('mEnd').value = '17:00';
+      document.getElementById('mMemo').value = '';
+      document.getElementById('mDel').style.display = 'none';
+      document.querySelectorAll('.pchip').forEach(c => c.classList.remove('on'));
+      document.getElementById('modalBg').classList.add('show');
+    }
+
+    function openEdit(id) {
+      const ev = events.find(e => e.id === id);
+      if (!ev) return;
+      editId = id;
+      document.getElementById('mTitle').textContent = '予定を編集';
+      document.getElementById('mPerson').value = String(ev.person);
+      document.getElementById('mTitleIn').value = ev.title;
+      document.getElementById('mDay').value = String(ev.day);
+      document.getElementById('mStart').value = fmtTime(ev.start);
+      document.getElementById('mEnd').value = fmtTime(ev.end);
+      document.getElementById('mMemo').value = ev.memo || '';
+      document.getElementById('mDel').style.display = 'block';
+      document.querySelectorAll('.pchip').forEach(c => c.classList.remove('on'));
+      document.getElementById('modalBg').classList.add('show');
+    }
+
+    function closeModal() { document.getElementById('modalBg').classList.remove('show'); }
+    function closeModalOut(e) { if (e.target === e.currentTarget) closeModal(); }
+
+    async function saveEv() {
+      const person = parseInt(document.getElementById('mPerson').value);
+      const title = document.getElementById('mTitleIn').value.trim();
+      const day = parseInt(document.getElementById('mDay').value);
+      const start = document.getElementById('mStart').value;
+      const end = document.getElementById('mEnd').value;
+      const memo = document.getElementById('mMemo').value.trim();
+
+      if (!title) { showToast('タイトルを入力してください', 'error'); return; }
+      if (start >= end) { showToast('終了時間が開始より前です', 'error'); return; }
+
+      if (editId) {
+        const idx = events.findIndex(e => e.id === editId);
+        if (idx !== -1) {
+          events[idx] = { ...events[idx], person, title, day, start, end, memo };
+          saveLocal(); closeModal(); renderGrid(); renderSummary();
+          const res = await apiPost({ action: 'update', event: events[idx] });
+          if (res && res.success) showToast('更新しました');
+          else if (GAS_URL && res === null) showToast('サーバー更新失敗', 'error');
+        }
+      } else {
+        const ev = { id: uid(), person, title, day, start, end, memo };
+        events.push(ev);
+        saveLocal(); closeModal(); renderGrid(); renderSummary();
+        const res = await apiPost({ action: 'add', event: ev });
+        if (res && res.success) showToast('追加しました');
+        else if (GAS_URL && res === null) showToast('サーバー追加失敗', 'error');
+      }
+    }
+
+    async function deleteEv() {
+      if (!editId) return;
+      if (!confirm('この予定を削除しますか？')) return;
+      const delId = editId;
+      events = events.filter(e => e.id !== delId);
+      saveLocal(); closeModal(); renderGrid(); renderSummary();
+      const res = await apiPost({ action: 'delete', id: delId });
+      if (res && res.success) showToast('削除しました');
+      else if (GAS_URL && res === null) showToast('サーバー削除失敗', 'error');
+    }
+
+    // ══════════════════════════════════════
+    //  Init
+    // ══════════════════════════════════════
+    function init() {
+      renderPersonSel();
+      renderTabs();
+      renderPresets();
+      updateWeekLabel();
+      updateAuthBtn();
       renderGrid();
       renderSummary();
-      // Async push to server
-      const res = await apiPost({ action: 'update', event: events[idx] });
-      if (res && res.success) showToast('更新しました');
-      else if (GAS_URL) showToast('サーバー更新失敗（ローカル保存済）','error');
+      checkSetup();
+      setInterval(renderGrid, 60000);
     }
-  } else {
-    const ev = { id: uid(), person, title, day, start, end, memo };
-    events.push(ev);
-    saveLocal();
-    closeModal();
-    renderGrid();
-    renderSummary();
-    const res = await apiPost({ action: 'add', event: ev });
-    if (res && res.success) showToast('追加しました');
-    else if (GAS_URL) showToast('サーバー追加失敗（ローカル保存済）','error');
-  }
-}
-
-async function deleteEv() {
-  if (!editId) return;
-  if (!confirm('この予定を削除しますか？')) return;
-  const delId = editId;
-  events = events.filter(e => e.id !== delId);
-  saveLocal();
-  closeModal();
-  renderGrid();
-  renderSummary();
-  const res = await apiPost({ action: 'delete', id: delId });
-  if (res && res.success) showToast('削除しました');
-  else if (GAS_URL) showToast('サーバー削除失敗（ローカル保存済）','error');
-}
-
-// ══════════════════════════════════════
-//  Init
-// ══════════════════════════════════════
-function init() {
-  renderPersonSel();
-  renderTabs();
-  renderPresets();
-  updateWeekLabel();
-  renderGrid();
-  renderSummary();
-  checkSetup();
-  setInterval(renderGrid, 60000);
-}
-
-init();
-</script>
+    init();
+  </script>
 </body>
+
 </html>
