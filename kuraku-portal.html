@@ -5,7 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#23684e">
+<meta name="description" content="くらくポータル。地域のモノ・移動・場所・人をつなぐ試作Webアプリ">
 <title>くらくポータル｜地域とつながる入口</title>
+
 <style>
 :root {
   --green:#23684e;
@@ -13,17 +15,37 @@
   --bg:#f6f8f3;
   --line:#dce6de;
 }
-* {box-sizing:border-box}
+
+* {
+  box-sizing:border-box;
+}
+
 body {
   margin:0;
   background:var(--bg);
   color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,
-    "Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    "Hiragino Kaku Gothic ProN",
+    "Noto Sans JP",sans-serif;
   line-height:1.65;
 }
-button,input,select,textarea {font:inherit}
-button {cursor:pointer}
+
+button,input,select,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline:3px solid #d39a37;
+  outline-offset:2px;
+}
+
 header {
   background:#fff;
   padding:15px 18px;
@@ -31,20 +53,43 @@ header {
   font-weight:800;
   border-bottom:1px solid var(--line);
 }
+
+header small {
+  font-size:12px;
+  color:#6a7c70;
+}
+
 main {
   max-width:880px;
   margin:auto;
   padding:20px 16px 115px;
 }
-.page {display:none}
-.page.active {display:block}
+
+.page {
+  display:none;
+}
+
+.page.active {
+  display:block;
+}
+
 .hero {
-  background:linear-gradient(120deg,#dff1e5,#fff4dc);
+  background:linear-gradient(
+    120deg,#dff1e5,#fff4dc
+  );
   padding:30px 22px;
   border-radius:20px;
 }
-.hero h1 {font-size:27px;margin:0}
-.hero p {margin-bottom:0}
+
+.hero h1 {
+  font-size:27px;
+  margin:0;
+}
+
+.hero p {
+  margin-bottom:0;
+}
+
 .notice {
   padding:12px;
   margin:15px 0;
@@ -52,12 +97,14 @@ main {
   border-radius:12px;
   font-size:13px;
 }
+
 .menu {
   display:grid;
   grid-template-columns:repeat(2,1fr);
   gap:12px;
   margin-top:20px;
 }
+
 .tile {
   padding:22px 10px;
   border:0;
@@ -65,14 +112,39 @@ main {
   background:white;
   text-align:center;
   box-shadow:0 3px 12px #0000000a;
+  color:var(--ink);
 }
-.tile span {display:block;font-size:36px}
-.tile strong {display:block;font-size:18px}
-.tile small {font-size:12px}
-.tile:nth-child(1) {background:#e6f2e6}
-.tile:nth-child(2) {background:#e4f1fc}
-.tile:nth-child(3) {background:#fff0e1}
-.tile:nth-child(4) {background:#f3eafa}
+
+.tile span {
+  display:block;
+  font-size:36px;
+}
+
+.tile strong {
+  display:block;
+  font-size:18px;
+}
+
+.tile small {
+  font-size:12px;
+}
+
+.tile:nth-child(1) {
+  background:#e6f2e6;
+}
+
+.tile:nth-child(2) {
+  background:#e4f1fc;
+}
+
+.tile:nth-child(3) {
+  background:#fff0e1;
+}
+
+.tile:nth-child(4) {
+  background:#f3eafa;
+}
+
 .card {
   margin:12px 0;
   padding:20px;
@@ -80,8 +152,15 @@ main {
   border:1px solid var(--line);
   border-radius:16px;
 }
-.card h2 {font-size:19px;margin-top:0}
-input[type="search"],select,textarea {
+
+.card h2 {
+  font-size:19px;
+  margin-top:0;
+}
+
+input[type="search"],
+select,
+textarea {
   display:block;
   width:100%;
   padding:12px;
@@ -89,18 +168,33 @@ input[type="search"],select,textarea {
   border-radius:10px;
   margin:10px 0;
   background:#fff;
+  color:var(--ink);
 }
-textarea {min-height:110px}
+
+textarea {
+  min-height:110px;
+  resize:vertical;
+}
+
 .check {
   display:block;
   padding:10px 0;
 }
+
 .check input {
-  width:20px;height:20px;
+  width:20px;
+  height:20px;
   vertical-align:middle;
   accent-color:var(--green);
 }
-.actions {display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+
+.actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:14px;
+}
+
 .action {
   padding:11px 16px;
   border:0;
@@ -109,17 +203,21 @@ textarea {min-height:110px}
   color:white;
   font-weight:bold;
 }
+
 .action.secondary {
   background:#e5eee7;
   color:var(--green);
 }
+
 .result {
   white-space:pre-wrap;
+  overflow-wrap:anywhere;
   background:#edf5ed;
   border-radius:12px;
   padding:14px;
   margin-top:14px;
 }
+
 .bottomnav {
   position:fixed;
   bottom:0;
@@ -130,9 +228,12 @@ textarea {min-height:110px}
   grid-template-columns:repeat(5,minmax(0,1fr));
   background:#fffffff5;
   border-top:1px solid var(--line);
-  padding:5px 3px calc(5px + env(safe-area-inset-bottom));
+  padding:5px 3px calc(
+    5px + env(safe-area-inset-bottom)
+  );
   box-shadow:0 -4px 18px #00000008;
 }
+
 .bottomnav button {
   border:0;
   background:transparent;
@@ -142,276 +243,693 @@ textarea {min-height:110px}
   padding:5px 2px;
   border-radius:10px;
 }
+
 .bottomnav button span {
   display:block;
   font-size:23px;
 }
+
 .bottomnav button.active {
   background:#e5f2e8;
   color:var(--green);
   font-weight:800;
 }
-footer {text-align:center;font-size:12px;color:#66796c;padding:20px}
-#printArea {display:none}
-@media(min-width:700px) {
-  .menu {grid-template-columns:repeat(4,1fr)}
-  .bottomnav {max-width:680px;left:50%;transform:translateX(-50%);border-radius:16px 16px 0 0}
+
+/* 保存通知：ブラウザのalertを使わない */
+.saveNotice {
+  position:fixed;
+  bottom:calc(
+    88px + env(safe-area-inset-bottom)
+  );
+  left:50%;
+  transform:translateX(-50%);
+  z-index:9999;
+  padding:12px 22px;
+  border-radius:12px;
+  background:var(--green);
+  color:white;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+  box-shadow:0 4px 18px #0003;
+  pointer-events:none;
+  max-width:90%;
+  width:max-content;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .2s ease,
+    visibility .2s ease;
 }
+
+.saveNotice.show {
+  opacity:1;
+  visibility:visible;
+}
+
+.saveNotice.error {
+  background:#a83939;
+}
+
+footer {
+  text-align:center;
+  font-size:12px;
+  color:#66796c;
+  padding:20px;
+}
+
+#printArea {
+  display:none;
+}
+
+@media(min-width:700px) {
+  .menu {
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .bottomnav {
+    max-width:680px;
+    left:50%;
+    transform:translateX(-50%);
+    border-radius:16px 16px 0 0;
+  }
+}
+
 @media print {
-  header,main,.bottomnav,footer {display:none!important}
-  #printArea {display:block!important;white-space:pre-wrap;padding:20px;font-size:12pt}
-  body {background:white;color:black}
+  header,
+  main,
+  .bottomnav,
+  footer,
+  .saveNotice {
+    display:none!important;
+  }
+
+  #printArea {
+    display:block!important;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+    padding:20px;
+    font-size:12pt;
+  }
+
+  body {
+    background:white;
+    color:black;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<header>🌱 くらくポータル <small>v0.2</small></header>
+<header>
+  🌱 くらくポータル
+  <small>v0.2.1</small>
+</header>
 
 <main>
+
+<!-- ホーム -->
 <section id="home" class="page active">
+
   <div class="hero">
     <h1>地域で、できることを広げよう。</h1>
-    <p>モノ・移動・場所・人をつなぐ、くらくサポートの共通入口。</p>
+    <p>
+      モノ・移動・場所・人をつなぐ、
+      くらくサポートの共通入口。
+    </p>
   </div>
+
   <div class="notice">
-    🧪 試作版です。商品購入・旅行予約・正式なサービス手配は行えません。
+    🧪 試作版です。
+    商品購入・旅行予約・正式なサービス手配は行えません。
   </div>
+
   <div class="menu">
-    <button class="tile" onclick="show('shop')"><span>🛍️</span><strong>くらびん</strong><small>作品・商品</small></button>
-    <button class="tile" onclick="show('trip')"><span>🚐</span><strong>おでかけ</strong><small>移動・旅行相談</small></button>
-    <button class="tile" onclick="show('activity')"><span>🏡</span><strong>地域参加</strong><small>交流・体験・学び</small></button>
-    <button class="tile" onclick="show('help')"><span>💬</span><strong>相談する</strong><small>まずは話してみる</small></button>
+
+    <button class="tile" onclick="show('shop')">
+      <span>🛍️</span>
+      <strong>くらびん</strong>
+      <small>作品・商品</small>
+    </button>
+
+    <button class="tile" onclick="show('trip')">
+      <span>🚐</span>
+      <strong>おでかけ</strong>
+      <small>移動・旅行相談</small>
+    </button>
+
+    <button class="tile" onclick="show('activity')">
+      <span>🏡</span>
+      <strong>地域参加</strong>
+      <small>交流・体験・学び</small>
+    </button>
+
+    <button class="tile" onclick="show('help')">
+      <span>💬</span>
+      <strong>相談する</strong>
+      <small>まずは話してみる</small>
+    </button>
+
   </div>
 </section>
 
+<!-- くらびん -->
 <section id="shop" class="page">
+
   <h1>🛍️ くらびん</h1>
-  <p>地域の手仕事や作品を紹介する構想です。</p>
-  <input type="search" id="shopSearch" placeholder="商品を検索" oninput="filterCards('shopSearch','products')">
+
+  <p>
+    地域の手仕事や作品を紹介する構想です。
+  </p>
+
+  <input
+    type="search"
+    id="shopSearch"
+    placeholder="商品を検索"
+    aria-label="商品を検索"
+    oninput="filterCards('shopSearch','products')"
+  >
+
   <div id="products">
+
     <div class="card" data-key="やちむん 陶器">
       <h2>🏺 やちむん風の小皿</h2>
       <p>地域の手仕事をイメージした商品例です。</p>
       <small>サンプル・販売不可</small>
     </div>
+
     <div class="card" data-key="焼き菓子 食品">
       <h2>🍪 島の焼き菓子</h2>
       <p>沖縄の素材を使った商品を想定しています。</p>
       <small>サンプル・販売不可</small>
     </div>
+
     <div class="card" data-key="手織り 雑貨">
       <h2>🧶 手織りの小物入れ</h2>
       <p>地域の作り手を紹介するための例です。</p>
       <small>サンプル・販売不可</small>
     </div>
+
   </div>
 </section>
 
+<!-- おでかけ -->
 <section id="trip" class="page">
+
   <h1>🚐 おでかけ</h1>
-  <p>旅行や外出に必要な準備を整理しましょう。</p>
+
+  <p>
+    旅行や外出に必要な準備を整理しましょう。
+  </p>
+
   <div class="card">
+
     <h2>おでかけ準備チェック</h2>
-    <label class="check"><input type="checkbox" data-trip-check> 行き先を決める</label>
-    <label class="check"><input type="checkbox" data-trip-check> 移動手段を調べる</label>
-    <label class="check"><input type="checkbox" data-trip-check> 宿泊先の設備を確認する</label>
-    <label class="check"><input type="checkbox" data-trip-check> 必要な支援先を確認する</label>
+
+    <label class="check">
+      <input type="checkbox" data-trip-check>
+      行き先を決める
+    </label>
+
+    <label class="check">
+      <input type="checkbox" data-trip-check>
+      移動手段を調べる
+    </label>
+
+    <label class="check">
+      <input type="checkbox" data-trip-check>
+      宿泊先の設備を確認する
+    </label>
+
+    <label class="check">
+      <input type="checkbox" data-trip-check>
+      必要な支援先を確認する
+    </label>
+
   </div>
+
   <div class="card">
+
     <h2>相談メモ</h2>
+
     <label for="tripType">相談したい内容</label>
+
     <select id="tripType">
       <option>移動手段</option>
       <option>バリアフリー宿泊</option>
       <option>訪問先の設備</option>
       <option>その他の外出相談</option>
     </select>
+
     <label for="tripText">メモ（任意）</label>
-    <textarea id="tripText" placeholder="個人情報や詳しい医療・介助情報は記入しないでください"></textarea>
+
+    <textarea
+      id="tripText"
+      placeholder="個人情報や詳しい医療・介助情報は記入しないでください"
+    ></textarea>
+
     <div class="actions">
-      <button class="action" onclick="makeDraft('trip')">メモ作成</button>
-      <button class="action secondary" onclick="saveDraft('trip')">端末に保存</button>
-      <button class="action secondary" onclick="printDraft('trip')">印刷・PDF</button>
-      <button class="action secondary" onclick="downloadDraft('trip')">テキスト保存</button>
+
+      <button class="action" onclick="makeDraft('trip')">
+        メモ作成
+      </button>
+
+      <button class="action secondary" onclick="saveDraft('trip')">
+        端末に保存
+      </button>
+
+      <button class="action secondary" onclick="printDraft('trip')">
+        印刷・PDF
+      </button>
+
+      <button class="action secondary" onclick="downloadDraft('trip')">
+        テキスト保存
+      </button>
+
     </div>
+
     <div id="tripResult" class="result" hidden></div>
+
   </div>
 </section>
 
+<!-- 地域参加 -->
 <section id="activity" class="page">
+
   <h1>🏡 地域に参加</h1>
-  <p>地域の交流・学び・体験の機会を探せます。</p>
-  <input type="search" id="activitySearch" placeholder="活動を検索" oninput="filterCards('activitySearch','activities')">
+
+  <p>
+    地域の交流・学び・体験の機会を探せます。
+  </p>
+
+  <input
+    type="search"
+    id="activitySearch"
+    placeholder="活動を検索"
+    aria-label="活動を検索"
+    oninput="filterCards('activitySearch','activities')"
+  >
+
   <div id="activities">
+
     <div class="card" data-key="サロン 交流">
       <h2>☕ 地域のおしゃべりサロン</h2>
       <p>地域交流を想定した架空の活動例です。</p>
     </div>
+
     <div class="card" data-key="スマホ 学習">
       <h2>📱 スマホと暮らしの学び場</h2>
       <p>デジタル学習を想定した架空の活動例です。</p>
     </div>
+
     <div class="card" data-key="工芸 ものづくり">
       <h2>🎨 地域の手しごと体験</h2>
       <p>ものづくりを想定した架空の活動例です。</p>
     </div>
+
   </div>
 </section>
 
+<!-- 相談 -->
 <section id="help" class="page">
+
   <h1>💬 相談する</h1>
+
   <div class="card">
-    <p>相談したいことを整理するためのメモです。自動送信はされません。</p>
+
+    <p>
+      相談したいことを整理するためのメモです。
+      自動送信はされません。
+    </p>
+
     <label for="helpType">相談テーマ</label>
+
     <select id="helpType">
       <option>くらびん</option>
       <option>おでかけ</option>
       <option>地域参加</option>
       <option>その他</option>
     </select>
+
     <label for="helpText">相談メモ</label>
-    <textarea id="helpText" placeholder="個人情報は記入しないでください"></textarea>
+
+    <textarea
+      id="helpText"
+      placeholder="個人情報は記入しないでください"
+    ></textarea>
+
     <div class="actions">
-      <button class="action" onclick="makeDraft('help')">メモ作成</button>
-      <button class="action secondary" onclick="saveDraft('help')">端末に保存</button>
-      <button class="action secondary" onclick="printDraft('help')">印刷・PDF</button>
-      <button class="action secondary" onclick="downloadDraft('help')">テキスト保存</button>
+
+      <button class="action" onclick="makeDraft('help')">
+        メモ作成
+      </button>
+
+      <button class="action secondary" onclick="saveDraft('help')">
+        端末に保存
+      </button>
+
+      <button class="action secondary" onclick="printDraft('help')">
+        印刷・PDF
+      </button>
+
+      <button class="action secondary" onclick="downloadDraft('help')">
+        テキスト保存
+      </button>
+
     </div>
+
     <div id="helpResult" class="result" hidden></div>
+
   </div>
 </section>
+
 </main>
 
+<!-- 下部固定メニュー -->
 <nav class="bottomnav" aria-label="主要メニュー">
-  <button data-route="home" onclick="show('home')"><span>🏠</span>ホーム</button>
-  <button data-route="shop" onclick="show('shop')"><span>🛍️</span>くらびん</button>
-  <button data-route="trip" onclick="show('trip')"><span>🚐</span>おでかけ</button>
-  <button data-route="activity" onclick="show('activity')"><span>🏡</span>地域参加</button>
-  <button data-route="help" onclick="show('help')"><span>💬</span>相談</button>
+
+  <button type="button" data-route="home" onclick="show('home')">
+    <span>🏠</span>
+    ホーム
+  </button>
+
+  <button type="button" data-route="shop" onclick="show('shop')">
+    <span>🛍️</span>
+    くらびん
+  </button>
+
+  <button type="button" data-route="trip" onclick="show('trip')">
+    <span>🚐</span>
+    おでかけ
+  </button>
+
+  <button type="button" data-route="activity" onclick="show('activity')">
+    <span>🏡</span>
+    地域参加
+  </button>
+
+  <button type="button" data-route="help" onclick="show('help')">
+    <span>💬</span>
+    相談
+  </button>
+
 </nav>
 
+<!-- 保存通知 -->
+<div
+  id="saveNotice"
+  class="saveNotice"
+  role="status"
+  aria-live="polite"
+></div>
+
+<!-- 印刷専用エリア -->
 <div id="printArea"></div>
-<footer>くらくポータル v0.2｜試験運用</footer>
+
+<footer>
+  くらくポータル v0.2.1｜試験運用
+</footer>
 
 <script>
+
 const STORE_KEY = 'kuraku-portal-v02';
 
+let saveNoticeTimer = null;
+
+// ページ切り替え
 function show(id) {
-  if (!document.getElementById(id)) id='home';
-  document.querySelectorAll('.page').forEach(p=>{
-    p.classList.toggle('active',p.id===id);
+
+  if (!document.getElementById(id)) {
+    id = 'home';
+  }
+
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.toggle('active', p.id === id);
   });
-  document.querySelectorAll('.bottomnav button').forEach(b=>{
-    const active=b.dataset.route===id;
-    b.classList.toggle('active',active);
-    if(active) b.setAttribute('aria-current','page');
-    else b.removeAttribute('aria-current');
+
+  document.querySelectorAll('.bottomnav button').forEach(b => {
+
+    const active = b.dataset.route === id;
+
+    b.classList.toggle('active', active);
+
+    if (active) {
+      b.setAttribute('aria-current', 'page');
+    } else {
+      b.removeAttribute('aria-current');
+    }
+
   });
-  if(location.hash!=='#'+id) history.replaceState(null,'','#'+id);
-  window.scrollTo(0,0);
+
+  if (location.hash !== '#' + id) {
+    history.replaceState(null, '', '#' + id);
+  }
+
+  window.scrollTo(0, 0);
 }
 
-window.addEventListener('hashchange',()=>{
-  show(location.hash.slice(1)||'home');
+// URLのハッシュ変更
+window.addEventListener('hashchange', () => {
+  show(location.hash.slice(1) || 'home');
 });
 
-function filterCards(inputId,groupId) {
-  const q=document.getElementById(inputId).value.toLowerCase();
-  document.querySelectorAll('#'+groupId+' .card').forEach(card=>{
-    const text=(card.textContent+' '+card.dataset.key).toLowerCase();
-    card.hidden=!text.includes(q);
-  });
+// 商品・活動の検索
+function filterCards(inputId, groupId) {
+
+  const q = document.getElementById(inputId)
+    .value.toLowerCase();
+
+  document.querySelectorAll('#' + groupId + ' .card')
+    .forEach(card => {
+
+      const text = (
+        card.textContent + ' ' + card.dataset.key
+      ).toLowerCase();
+
+      card.hidden = !text.includes(q);
+
+    });
 }
 
+// 通知表示（alertを使わない）
+function showSaveMessage(message, isError = false) {
+
+  const notice = document.getElementById('saveNotice');
+
+  notice.textContent = message;
+
+  notice.classList.toggle('error', isError);
+
+  notice.classList.add('show');
+
+  clearTimeout(saveNoticeTimer);
+
+  saveNoticeTimer = setTimeout(() => {
+    notice.classList.remove('show');
+  }, 2200);
+}
+
+// メモの表示領域
 function getResult(type) {
-  return document.getElementById(type+'Result');
+  return document.getElementById(type + 'Result');
 }
 
+// メモ作成
 function makeDraft(type) {
-  const category=document.getElementById(type+'Type').value;
-  const memo=document.getElementById(type+'Text').value;
-  const title=type==='trip'?'おでかけ相談メモ':'相談メモ';
-  const text='【'+title+'】\n相談テーマ：'+category+
-    '\n内容：'+memo+
-    '\n\n※試作メモです。送信・予約・手配はされません。';
-  const result=getResult(type);
-  result.textContent=text;
-  result.hidden=false;
+
+  const category = document.getElementById(
+    type + 'Type'
+  ).value;
+
+  const memo = document.getElementById(
+    type + 'Text'
+  ).value;
+
+  const title = type === 'trip'
+    ? 'おでかけ相談メモ'
+    : '相談メモ';
+
+  const text =
+    '【' + title + '】\n' +
+    '相談テーマ：' + category + '\n' +
+    '内容：' + memo + '\n\n' +
+    '※試作メモです。送信・予約・手配はされません。';
+
+  const result = getResult(type);
+
+  result.textContent = text;
+  result.hidden = false;
+
   return text;
 }
 
+// 端末内保存データの読み込み
 function getData() {
+
   try {
-    return JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
+    return JSON.parse(
+      localStorage.getItem(STORE_KEY) || '{}'
+    );
   } catch(e) {
     return {};
   }
+
 }
 
+// メモを端末に保存
 function saveDraft(type) {
-  const text=makeDraft(type);
-  const data=getData();
-  data[type]={
-    category:document.getElementById(type+'Type').value,
-    memo:document.getElementById(type+'Text').value,
-    text:text,
-    updatedAt:new Date().toISOString()
+
+  const text = makeDraft(type);
+
+  const data = getData();
+
+  data[type] = {
+    category: document.getElementById(
+      type + 'Type'
+    ).value,
+
+    memo: document.getElementById(
+      type + 'Text'
+    ).value,
+
+    text: text,
+
+    updatedAt: new Date().toISOString()
   };
+
   try {
-    localStorage.setItem(STORE_KEY,JSON.stringify(data));
-    alert('この端末に保存しました');
+
+    localStorage.setItem(
+      STORE_KEY,
+      JSON.stringify(data)
+    );
+
+    showSaveMessage('✓ 端末に保存しました');
+
   } catch(e) {
-    alert('端末に保存できませんでした');
+
+    showSaveMessage(
+      '保存できませんでした。端末の設定を確認してください',
+      true
+    );
+
   }
 }
 
+// 保存したメモを復元
 function restoreDrafts() {
-  const data=getData();
-  for(const type of ['trip','help']) {
-    if(!data[type]) continue;
-    document.getElementById(type+'Type').value=data[type].category||'';
-    document.getElementById(type+'Text').value=data[type].memo||'';
-    const result=getResult(type);
-    result.textContent=data[type].text||'';
-    result.hidden=!data[type].text;
+
+  const data = getData();
+
+  for (const type of ['trip', 'help']) {
+
+    if (!data[type]) continue;
+
+    const categoryField = document.getElementById(
+      type + 'Type'
+    );
+
+    const memoField = document.getElementById(
+      type + 'Text'
+    );
+
+    categoryField.value = data[type].category || '';
+    memoField.value = data[type].memo || '';
+
+    const result = getResult(type);
+
+    result.textContent = data[type].text || '';
+    result.hidden = !data[type].text;
+
   }
 }
 
+// 印刷・PDF保存
 function printDraft(type) {
-  const text=makeDraft(type);
-  document.getElementById('printArea').textContent=text;
+
+  const text = makeDraft(type);
+
+  document.getElementById(
+    'printArea'
+  ).textContent = text;
+
   window.print();
 }
 
+// テキストファイル保存
 function downloadDraft(type) {
-  const text=makeDraft(type);
-  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');
-  link.href=url;
-  link.download='kuraku-'+type+'-memo.txt';
+
+  const text = makeDraft(type);
+
+  const blob = new Blob([text], {
+    type: 'text/plain;charset=utf-8'
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'kuraku-' + type + '-memo.txt';
+
   document.body.appendChild(link);
+
   link.click();
   link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
+
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1000);
+
 }
 
-document.querySelectorAll('[data-trip-check]').forEach((el,i)=>{
-  const data=getData();
-  el.checked=!!(data.checks&&data.checks[i]);
-  el.addEventListener('change',()=>{
-    const next=getData();
-    next.checks=[...document.querySelectorAll('[data-trip-check]')]
-      .map(c=>c.checked);
-    try {
-      localStorage.setItem(STORE_KEY,JSON.stringify(next));
-    } catch(e) {}
-  });
-});
+// おでかけチェックリスト保存
+document.querySelectorAll('[data-trip-check]')
+  .forEach((el, i) => {
 
+    const data = getData();
+
+    el.checked = !!(
+      data.checks && data.checks[i]
+    );
+
+    el.addEventListener('change', () => {
+
+      const next = getData();
+
+      next.checks = [
+        ...document.querySelectorAll('[data-trip-check]')
+      ].map(c => c.checked);
+
+      try {
+
+        localStorage.setItem(
+          STORE_KEY,
+          JSON.stringify(next)
+        );
+
+        showSaveMessage('✓ チェック項目を保存しました');
+
+      } catch(e) {
+
+        showSaveMessage(
+          'チェック項目を保存できませんでした',
+          true
+        );
+
+      }
+
+    });
+
+  });
+
+// 保存データを復元
 restoreDrafts();
-show(location.hash.slice(1)||'home');
+
+// 初期画面表示
+show(location.hash.slice(1) || 'home');
+
 </script>
+
 </body>
 </html>
