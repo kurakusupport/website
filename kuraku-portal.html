@@ -1,79 +1,335 @@
-<!doctype html>
 
+<!DOCTYPE html>
 <html lang="ja">
-
 <head>
-
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-
-<meta name="theme-color" content="#20654d"><meta name="description" content="くらくポータル v0.1：地域の作品・外出・参加の機会を探す試作Webアプリ">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>くらくポータル｜地域とつながる入口</title>
-
+<meta name="theme-color" content="#246a50">
 <style>
+:root {
+  --green:#246a50;
+  --ink:#213b31;
+  --bg:#f6f8f3;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:"Hiragino Kaku Gothic ProN",
+    "Noto Sans JP",sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.7;
+}
+header {
+  background:white;
+  padding:16px 20px;
+  border-bottom:1px solid #dce8df;
+  font-weight:bold;
+  font-size:21px;
+}
+main {
+  max-width:880px;
+  margin:auto;
+  padding:20px 16px 100px;
+}
+.hero {
+  padding:30px 22px;
+  border-radius:20px;
+  background:linear-gradient(120deg,#d9f0e1,#fdf5df);
+}
+.hero h1 { margin:0; font-size:30px; }
+.hero p { margin-bottom:0; }
+.notice {
+  padding:12px;
+  background:#fff3d9;
+  border-radius:12px;
+  font-size:13px;
+  margin:16px 0;
+}
+.menu {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-top:22px;
+}
+.tile {
+  border:0;
+  padding:24px 12px;
+  border-radius:18px;
+  background:white;
+  text-align:center;
+  box-shadow:0 4px 15px #0000000c;
+  cursor:pointer;
+  color:var(--ink);
+}
+.tile span { display:block; font-size:42px; }
+.tile strong { display:block; font-size:19px; }
+.tile small { font-size:12px; }
+.tile:nth-child(1) { background:#edf3df; }
+.tile:nth-child(2) { background:#e5f1fa; }
+.tile:nth-child(3) { background:#fff0e0; }
+.tile:nth-child(4) { background:#f1e7f7; }
+section.page { display:none; }
+section.page.active { display:block; }
+.card {
+  background:white;
+  border:1px solid #e2e9e1;
+  border-radius:16px;
+  padding:20px;
+  margin:12px 0;
+}
+button.action {
+  background:var(--green);
+  color:white;
+  border:0;
+  border-radius:10px;
+  padding:12px 20px;
+  cursor:pointer;
+  font-weight:bold;
+}
+button.back {
+  border:0;
+  background:none;
+  padding:15px 0;
+  color:var(--green);
+  font-weight:bold;
+  cursor:pointer;
+}
+input,select,textarea {
+  width:100%;
+  padding:12px;
+  border:1px solid #bdcec3;
+  border-radius:10px;
+  font:inherit;
+  margin:6px 0 14px;
+}
+textarea { min-height:100px; }
+label { font-weight:bold; }
+label.check {
+  display:block;
+  font-weight:normal;
+  padding:9px;
+}
+label.check input { width:auto; margin-right:9px; }
+.result {
+  white-space:pre-wrap;
+  background:#edf5ed;
+  border-radius:12px;
+  padding:15px;
+  margin-top:15px;
+}
+footer {
+  text-align:center;
+  padding:25px;
+  color:#697b70;
+  font-size:12px;
+}
+@media(min-width:700px) {
+  .menu { grid-template-columns:repeat(4,1fr); }
+}
+</style>
+</head>
+<body>
 
-:root{--forest:#225c48;--deep:#183f35;--green:#367b60;--mint:#eaf5ee;--cream:#fbfaf5;--ink:#253832;--sub:#63766e;--line:#dce5dc;--blue:#e8f2fb;--amber:#fff3df;--violet:#f2eafd;--white:#fff;--shadow:0 12px 34px rgba(31,70,49,.075)}
+<header>🌱 くらくポータル <small>v0.1</small></header>
 
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--cream);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;line-height:1.65}button,input,select,textarea{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #db9634;outline-offset:3px}a{color:var(--forest)}.shell{max-width:1120px;margin:auto;padding:0 22px}.skip{position:absolute;top:-100px;left:15px;background:#fff;padding:10px;z-index:99}.skip:focus{top:12px}
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <h1>地域で、できることを広げよう。</h1>
+    <p>モノ・移動・場所・人をつなぐ、
+       くらくサポートの共通入口です。</p>
+  </div>
 
-.top{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.topin{display:flex;align-items:center;justify-content:space-between;min-height:74px;gap:15px}.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--deep);font-size:21px;font-weight:850;letter-spacing:-.04em}.brandmark{width:40px;height:40px;border-radius:13px;background:var(--forest);color:#fff;display:grid;place-items:center;font-size:22px}.topright{display:flex;align-items:center;gap:12px}.demo{font-size:12px;border:1px solid #e9c980;color:#7a5623;border-radius:99px;padding:3px 10px;background:#fff7df;font-weight:700}.plain{border:0;background:none;color:var(--forest);font-weight:800;padding:8px}.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,#e3f2e7 0%,#f4f7e8 61%,#fbf8e8 100%)}.hero:after{content:"";position:absolute;width:460px;height:460px;border:65px solid rgba(255,255,255,.4);border-radius:50%;right:-160px;top:-250px}.hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:32px;padding-top:56px;padding-bottom:57px}.eyebrow{color:#377459;font-weight:800;font-size:13px;letter-spacing:.13em}.hero h1{font-size:clamp(29px,4.8vw,54px);line-height:1.3;letter-spacing:-.055em;margin:12px 0 18px;color:var(--deep)}.hero p{font-size:16px;max-width:540px;margin:0;color:#486454}.hero-art{width:230px;height:230px;flex-shrink:0;border-radius:44px;background:radial-gradient(circle at 20% 18%,#fff 0 12%,transparent 13%),linear-gradient(145deg,#84cbaa,#3d8c71);display:grid;place-items:center;box-shadow:0 19px 45px #47755a38;transform:rotate(-5deg)}.hero-art span{font-size:108px;transform:rotate(5deg);filter:drop-shadow(0 8px 0 #24543a24)}.main{padding-top:36px;padding-bottom:130px}.notice{background:white;border:1px solid #f0dfb9;border-left:5px solid #cf9c49;border-radius:13px;padding:14px 17px;color:#68583c;font-size:13px;display:flex;gap:10px;align-items:start}.notice b{color:#725322}.sectionHead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:39px 0 16px}.sectionHead h2{font-size:26px;line-height:1.3;letter-spacing:-.04em;margin:0}.sectionHead p{font-size:13px;color:var(--sub);margin:5px 0 0}.tilegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.tile{min-height:217px;border:1px solid rgba(17,68,42,.06);border-radius:22px;padding:20px 18px;display:flex;flex-direction:column;text-align:left;box-shadow:var(--shadow);transition:transform .16s,box-shadow .16s}.tile:hover{transform:translateY(-3px);box-shadow:0 16px 30px #284c3e20}.tile .emoji{width:66px;height:66px;background:#ffffffb9;border-radius:20px;display:grid;place-items:center;font-size:34px;margin-bottom:15px}.tile strong{font-size:21px;color:#254236;line-height:1.3}.tile small{font-size:13px;color:#5f6c60;margin-top:6px}.tile .next{margin-top:auto;font-size:13px;font-weight:800;color:#245b47;padding-top:12px}.t-shop{background:#f1f4e3}.t-trip{background:#e9f2fc}.t-activity{background:#fff0e4}.t-help{background:#f1eafd}
+  <div class="notice">
+    🧪 これは試作版です。
+    商品購入、予約、実際のサービス手配はできません。
+  </div>
 
-.view{display:none;animation:appear .2s ease}.view.active{display:block}@keyframes appear{from{opacity:.35;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}.back{border:none;background:transparent;color:var(--forest);font-weight:800;margin:28px 0 15px;padding:6px 0}.pageHeader{display:flex;align-items:start;gap:16px;margin:18px 0 25px}.pageIcon{width:66px;height:66px;border-radius:20px;display:grid;place-items:center;font-size:32px;background:var(--mint)}.pageHeader h1{margin:0;font-size:clamp(25px,4vw,36px);letter-spacing:-.045em}.pageHeader p{margin:5px 0;color:var(--sub)}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:17px}.search{flex:1;min-width:185px;border:1px solid #d4e0d6;border-radius:12px;background:white;padding:12px 15px;min-height:48px}.filter{border:1px solid #d4e0d6;border-radius:12px;background:white;padding:12px;min-height:48px;color:#314a3e}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.item{background:#fff;border:1px solid #e5ebe3;border-radius:20px;overflow:hidden;box-shadow:0 7px 20px #2446380c;display:flex;flex-direction:column}.art{height:145px;display:grid;place-items:center;font-size:70px;background:linear-gradient(130deg,#edf3e6,#f5eee1)}.item:nth-child(3n+2) .art{background:linear-gradient(130deg,#edf3fa,#e7f5ed)}.item:nth-child(3n) .art{background:linear-gradient(130deg,#fbefdf,#f5e8f4)}.itembody{padding:18px;display:flex;flex-direction:column;flex:1}.pill{display:inline-flex;align-self:start;border-radius:99px;padding:3px 10px;background:#eef5ef;color:#35664d;font-size:12px;font-weight:800}.item h3{font-size:19px;line-height:1.4;margin:12px 0 5px}.item p{font-size:13px;color:var(--sub);margin:0 0 13px}.itembottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;gap:8px}.itembottom .meta{font-size:12px;color:#73837a}.btn{border:0;border-radius:12px;padding:11px 18px;font-weight:800;background:var(--forest);color:white;line-height:1.4}.btn:hover{background:#174534}.btn.secondary{background:#edf5ef;color:var(--forest)}.btn.outline{border:1px solid #9fb9a6;background:white;color:var(--forest)}.btn:disabled{opacity:.5;cursor:not-allowed}.empty{padding:30px;border-radius:14px;background:white;border:1px dashed var(--line);color:var(--sub);text-align:center}.panel{background:white;border:1px solid #e2eae2;border-radius:20px;padding:25px;box-shadow:var(--shadow)}.twocol{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.panel h2{font-size:22px;margin:0 0 12px}.panel h3{margin:20px 0 8px}.panel p{font-size:14px;color:var(--sub)}.steps{padding:0;list-style:none;margin:0}.steps li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.steps li:last-child{border:0}.num{flex-shrink:0;width:29px;height:29px;display:grid;place-items:center;border-radius:50%;background:var(--mint);color:var(--forest);font-size:13px;font-weight:900}.quick{display:grid;gap:9px}.quick label{display:flex;align-items:center;gap:10px;background:#f8faf7;border:1px solid #e8ede7;border-radius:12px;padding:12px}.quick input{width:19px;height:19px;accent-color:var(--forest)}.helper{background:#f3f8ed;border-radius:12px;padding:13px;margin-top:15px;color:#426149;font-size:13px}.formgrid{display:grid;gap:16px}.field label{display:block;font-weight:800;font-size:14px;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid #cbdacf;border-radius:11px;padding:12px;background:#fff;color:var(--ink)}.field textarea{min-height:116px;resize:vertical}.field .hint{font-size:12px;color:var(--sub);margin-top:5px}.draft{white-space:pre-wrap;font-size:14px;background:#f5f8f2;border:1px dashed #b8ccb9;padding:16px;border-radius:12px;margin-top:13px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.privacy{font-size:12px;color:#725522;background:#fff8e7;border:1px solid #f1dbad;padding:12px;border-radius:10px}.footer{text-align:center;padding:30px 20px 120px;border-top:1px solid var(--line);color:var(--sub);font-size:12px}.bottomnav{display:none}.aboutGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.stat{padding:17px;border-radius:14px;background:#f3f8f3}.stat b{display:block;font-size:22px;color:var(--forest)}.mini{font-size:12px;color:var(--sub)}.toast{position:fixed;z-index:100;bottom:90px;left:50%;transform:translateX(-50%);background:#1b4f39;color:#fff;padding:10px 18px;border-radius:99px;box-shadow:0 10px 30px #123d2340;opacity:0;pointer-events:none;transition:opacity .15s}.toast.show{opacity:1}.dialog{border:0;border-radius:22px;padding:0;max-width:min(540px,calc(100vw - 30px));width:100%;box-shadow:0 26px 90px #112f2566}.dialog::backdrop{background:#17261cab}.dialogIn{padding:22px}.dialog h2{margin:3px 0 10px}.dialog .art{height:170px;border-radius:14px}.dialogFoot{display:flex;gap:8px;justify-content:flex-end;margin-top:17px}
+  <div class="menu">
+    <button class="tile" onclick="show('shop')">
+      <span>🛍️</span><strong>くらびん</strong>
+      <small>作品・商品を探す</small>
+    </button>
+    <button class="tile" onclick="show('trip')">
+      <span>🚐</span><strong>おでかけ</strong>
+      <small>移動・旅行の相談</small>
+    </button>
+    <button class="tile" onclick="show('activity')">
+      <span>🏡</span><strong>地域参加</strong>
+      <small>交流・学び・体験</small>
+    </button>
+    <button class="tile" onclick="show('help')">
+      <span>💬</span><strong>相談する</strong>
+      <small>まずは話してみる</small>
+    </button>
+  </div>
+</section>
 
-@media(max-width:790px){.hero-art{width:150px;height:150px;border-radius:29px}.hero-art span{font-size:72px}.tilegrid{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:repeat(2,1fr)}.twocol{grid-template-columns:1fr}.aboutGrid{grid-template-columns:1fr 1fr}}@media(max-width:540px){.shell{padding:0 16px}.topin{min-height:62px}.brand{font-size:18px}.brandmark{width:35px;height:35px}.demo{font-size:10px}.hero-inner{padding-top:35px;padding-bottom:37px}.hero-art{display:none}.hero h1{font-size:32px}.hero p{font-size:14px}.main{padding-top:24px}.tilegrid{gap:10px}.tile{padding:14px;min-height:176px;border-radius:18px}.tile .emoji{font-size:29px;width:52px;height:52px;margin-bottom:12px}.tile strong{font-size:18px}.tile small{font-size:12px}.sectionHead h2{font-size:23px}.cards{grid-template-columns:1fr}.art{height:135px}.panel{padding:18px}.pageIcon{width:56px;height:56p[... ELLIPSIZATION ...]main" aria-labelledby="activityh"><button class="back" data-route="home">← ホームへ</button><div class="pageHeader"><div class="pageIcon" style="background:#fff0e4">🏡</div><div><h1 id="activityh">地域に参加</h1><p>地域にある学び・体験・交流の入口を探す。</p></div></div><div class="notice">🧪 <span>以下は架空の活動例です。実際の開催日時・場所・申込み先ではありません。</span></div><div class="sectionHead"><div><h2>活動を探す</h2><p id="activityCount">3件のサンプル</p></div></div><div class="toolbar"><input id="activityQuery" class="search" type="search" placeholder="活動名・キーワードで探す" aria-label="活動を検索"><select id="activityFilter" class="filter" aria-label="活動カテゴリ"><option value="all">すべてのカテゴリ</option><option value="交流">交流</option><option value="学び">学び</option><option value="体験">体験</option></select></div><div id="activityCards" class="cards"></div><div class="helper">💡 将来はLUANA・サンブリッジなどの地域拠点を、各拠点の同意と情報確認が取れてから掲載する想定です。</div></section>
+<section id="shop" class="page">
+  <button class="back" onclick="show('home')">← ホームへ</button>
+  <h1>🛍️ くらびん</h1>
+  <p>地域の作品・商品を紹介する構想です。</p>
 
-<section id="help" class="view shell main" aria-labelledby="helph"><button class="back" data-route="home">← ホームへ</button><div class="pageHeader"><div class="pageIcon" style="background:#f1eafd">💬</div><div><h1 id="helph">相談する</h1><p>いま気になっていることを、短い言葉で整理できます。</p></div></div><div class="twocol"><div class="panel"><h2>相談メモを作る</h2><p>個人情報や病状などは記入せず、相談の種類を選んでみよう。</p><div class="formgrid"><div class="field"><label for="helpType">相談したいテーマ</label><select id="helpType"><option>くらびん（商品・作品）</option><option>おでかけ（移動・旅行）</option><option>地域の活動・参加</option><option>どれがよいか分からない</option></select></div><div class="field"><label for="helpMessage">相談したいこと（任意）</label><textarea id="helpMessage" maxlength="180" placeholder="例：地域の体験活動を探したいです。"></textarea><div class="hint">180文字以内。個人が特定される情報は書かないでください。</div></div><button class="btn" id="makeHelpDraft">相談メモを作る</button></div><div id="helpDraftWrap" hidden><div id="helpDraft" class="draft"></div><div class="actions"><button class="btn outline" data-copy="helpDraft">文章をコピー</button></div></div></div><div class="panel"><h2>この試作版でできること</h2><ol class="steps"><li><span class="num">1</span><span>相談のテーマを選ぶ</span></li><li><span class="num">2</span><span>短い相談メモを作る</span></li><li><span class="num">3</span><span>文面をコピーし、適切な相談先へ自分で伝える</span></li></ol><div class="helper">このサイトは相談内容をサーバーに送信しません。公式LINEや担当者との自動連携も未実装です。緊急時の相談窓口ではありません。</div></div></div></section>
+  <input id="shopSearch" placeholder="商品を検索"
+    oninput="filterCards('shopSearch','products')">
 
-<section id="about" class="view shell main" aria-labelledby="abouth"><button class="back" data-route="home">← ホームへ</button><div class="pageHeader"><div class="pageIcon">🌱</div><div><h1 id="abouth">くらくポータルについて</h1><p>「くらくサポート」の地域生活プラットフォーム構想を試すデモです。</p></div></div><div class="panel"><h2>このアプリの位置づけ</h2><p>地域の作品を探す「くらびん」、移動や旅行の準備を考える「おでかけ」、地域の学びや交流を探す「地域参加」を一つの入口で体験するための試作品です。</p><h3>現時点では実施しないこと</h3><p>商品販売、決済、正式な予約、福祉・旅行サービスの手配、会員登録、相談内容の外部送信はありません。</p><h3>個人情報について</h3><p>このHTMLは外部APIやアクセス解析を呼びません。おでかけのチェック状況のみブラウザのローカル保存を使用し、相談メモや選択内容はサーバーに送られません。共有端末では個人情報を入力しないでください。</p><h3>制作上の参考</h3><p>琉球のタネの「ケア・トリセツ」の考え方を参考にしつつ、個人のケア情報とは切り離した独立した画面として設計しています。</p><a href="https://mikata.ryukyu-tane.com/care-torisetu.html" target="_blank" rel="noopener noreferrer">参考：ケア・トリセツ ↗</a><h3>次に確認したいこと</h3><p>利用者がどのメニューに関心を持つか、情報を探しやすいか、相談受付にどんな情報が必要かを少人数で検証します。</p></div></section>
+  <div id="products">
+    <div class="card" data-key="陶器 やちむん">
+      <h2>🏺 やちむん風の小皿</h2>
+      <p>地域の手仕事を紹介する架空の商品例です。</p>
+      <small>サンプル・販売不可</small>
+    </div>
+    <div class="card" data-key="食品 焼菓子">
+      <h2>🍪 島の焼き菓子</h2>
+      <p>沖縄の素材をイメージした商品例です。</p>
+      <small>サンプル・販売不可</small>
+    </div>
+    <div class="card" data-key="雑貨 手織り">
+      <h2>🧶 手織りの小物入れ</h2>
+      <p>作り手の紹介を想定した商品例です。</p>
+      <small>サンプル・販売不可</small>
+    </div>
+  </div>
+</section>
 
+<section id="trip" class="page">
+  <button class="back" onclick="show('home')">← ホームへ</button>
+  <h1>🚐 おでかけ</h1>
+  <p>バリアフリー旅行や移動に必要な情報を整理します。</p>
+
+  <div class="card">
+    <h2>おでかけ準備チェック</h2>
+    <label class="check"><input type="checkbox">行き先を決める</label>
+    <label class="check"><input type="checkbox">移動手段を調べる</label>
+    <label class="check"><input type="checkbox">宿泊先の設備を確認</label>
+    <label class="check"><input type="checkbox">必要な支援先を確認</label>
+  </div>
+
+  <div class="card">
+    <h2>相談メモを作る</h2>
+    <label for="tripType">相談したい内容</label>
+    <select id="tripType">
+      <option>移動手段</option>
+      <option>バリアフリー宿泊</option>
+      <option>外出先の設備</option>
+      <option>その他の外出相談</option>
+    </select>
+    <button class="action" onclick="tripDraft()">メモ作成</button>
+    <div id="tripResult" class="result" hidden></div>
+  </div>
+</section>
+
+<section id="activity" class="page">
+  <button class="back" onclick="show('home')">← ホームへ</button>
+  <h1>🏡 地域に参加</h1>
+  <p>地域の学び・交流・体験の機会を探します。</p>
+
+  <input id="activitySearch" placeholder="活動を検索"
+    oninput="filterCards('activitySearch','activities')">
+
+  <div id="activities">
+    <div class="card" data-key="交流 サロン 居場所">
+      <h2>☕ 地域のおしゃべりサロン</h2>
+      <p>地域交流を想定した架空の活動例です。</p>
+    </div>
+    <div class="card" data-key="学び スマホ 教室">
+      <h2>📱 スマホと暮らしの学び場</h2>
+      <p>デジタル学習を想定した架空の活動例です。</p>
+    </div>
+    <div class="card" data-key="体験 工芸 手仕事">
+      <h2>🎨 地域の手しごと体験</h2>
+      <p>ものづくり体験を想定した架空の活動例です。</p>
+    </div>
+  </div>
+</section>
+
+<section id="help" class="page">
+  <button class="back" onclick="show('home')">← ホームへ</button>
+  <h1>💬 相談する</h1>
+
+  <div class="card">
+    <p>個人情報を記入せず、相談の種類を整理しましょう。</p>
+    <label for="helpType">相談テーマ</label>
+    <select id="helpType">
+      <option>くらびん</option>
+      <option>おでかけ</option>
+      <option>地域参加</option>
+      <option>その他</option>
+    </select>
+    <label for="helpText">相談したいこと</label>
+    <textarea id="helpText" maxlength="180"
+      placeholder="例：地域の体験活動を探しています。"></textarea>
+
+    <button class="action" onclick="helpDraft()">メモ作成</button>
+    <div id="helpResult" class="result" hidden></div>
+    <button class="action" id="copyButton"
+      onclick="copyDraft()" hidden>文章をコピー</button>
+  </div>
+  <p>※相談内容は自動送信されません。</p>
+</section>
 </main>
 
-<footer class="footer">くらくポータル v0.1 — 試作用・非公開運用を推奨<br>このページ内の掲載例は架空のデータです。</footer>
-
-<nav class="bottomnav" aria-label="主要メニュー"><button type="button" data-route="shop"><span class="navIcon">🛍️</span>くらびん</button><button type="button" data-route="trip"><span class="navIcon">🚐</span>おでかけ</button><button type="button" data-route="activity"><span class="navIcon">🏡</span>地域参加</button><button type="button" data-route="help"><span class="navIcon">💬</span>相談</button></nav>
-
-<dialog id="detailDialog" class="dialog" aria-labelledby="dialogTitle"><div class="dialogIn"><div id="dialogArt" class="art" aria-hidden="true"></div><h2 id="dialogTitle"></h2><div id="dialogCategory" class="pill"></div><p id="dialogDescription"></p><p id="dialogNote" class="mini"></p><div class="dialogFoot"><button class="btn secondary" id="closeDialog" type="button">閉じる</button><button class="btn" id="dialogDraft" type="button">相談メモに進む</button></div></div></dialog><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<footer>
+  くらくポータル v0.1｜試験運用<br>
+  掲載内容はすべて架空のサンプルです。
+</footer>
 
 <script>
+function show(id) {
+  document.querySelectorAll('.page').forEach(
+    page => page.classList.remove('active')
+  );
+  document.getElementById(id).classList.add('active');
+  history.replaceState(null,'','#'+id);
+  window.scrollTo(0,0);
+}
 
-(()=>{'use strict';
+function filterCards(inputId,groupId) {
+  const query=document.getElementById(inputId)
+    .value.toLowerCase();
+  document.querySelectorAll('#'+groupId+' .card').forEach(card=>{
+    const text=(card.textContent+' '+card.dataset.key)
+      .toLowerCase();
+    card.style.display=text.includes(query)?'':'none';
+  });
+}
 
-const items={shop:[{id:'s1',title:'やちむん風の小皿',category:'工芸',emoji:'🏺',desc:'土の風合いを生かした手づくりの小皿。地域のものづくりを紹介するための架空の掲載例です。',note:'デモ商品／販売・注文不可',keywords:'陶器 焼き物 やちむん'},{id:'s2',title:'島の手づくりクッキー',category:'食品',emoji:'🍪',desc:'地元の素材に着想を得た焼き菓子の架空サンプルです。食品を扱う際は品質表示や販売管理の検討が必要です。',note:'デモ商品／実物・価格・在庫なし',keywords:'お菓子 焼菓子'},{id:'s3',title:'手織りの小物入れ',category:'雑貨',emoji:'🧶',desc:'手仕事の温もりを伝える布小物の架空サンプル。作り手のストーリーを伝えるページを想定しています。',note:'デモ商品／販売・注文不可',keywords:'布 工芸 手織り'}],activity:[{id:'a1',title:'地域のおしゃべりサロン',category:'交流',emoji:'☕',desc:'年齢を問わずおしゃべりや交流を楽しむ地域の集まりを想定した架空の活動例です。',note:'デモ活動／開催予定なし',keywords:'サロン 居場所 おしゃべり'},{id:'a2',title:'スマホと暮らしの学び場',category:'学び',emoji:'📱',desc:'スマホの基本操作や便利な使い方を一緒に学ぶ架空の活動例です。',note:'デモ活動／申込み不可',keywords:'デジタル 教室'},{id:'a3',title:'地域の手しごと体験',category:'体験',emoji:'🎨',desc:'地域の作り手と一緒に制作を楽しむ架空の体験プログラム例です。',note:'デモ活動／実施場所未定',keywords:'工芸 ワークショップ'}]};
+function tripDraft() {
+  const type=document.getElementById('tripType').value;
+  const el=document.getElementById('tripResult');
+  el.textContent='【おでかけ相談メモ】\n相談内容：'+type+
+    '\n必要な情報や相談窓口を知りたいです。'+
+    '\n\n※試作メモです。予約や手配はされません。';
+  el.hidden=false;
+}
 
-const el=id=>document.getElementById(id); const routes=['home','shop','trip','activity','help','about'];let chosen=null;let toastTimer;
+function helpDraft() {
+  const type=document.getElementById('helpType').value;
+  const message=document.getElementById('helpText').value;
+  const el=document.getElementById('helpResult');
+  el.textContent='【相談メモ】\nテーマ：'+type+
+    '\n相談内容：'+message+
+    '\n\n※このメモは送信されていません。';
+  el.hidden=false;
+  document.getElementById('copyButton').hidden=false;
+}
 
-function route(name){if(!routes.includes(name))name='home';document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===name));document.querySelectorAll('[data-route]').forEach(b=>{if(b.closest('.bottomnav')){if(b.dataset.route===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}});history.replaceState(null,'','#'+name);window.scrollTo({top:0,behavior:'instant'});}
+async function copyDraft() {
+  const text=document.getElementById('helpResult').textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    alert('コピーしました');
+  } catch(e) {
+    alert('コピーできませんでした。文章を選択してコピーしてください。');
+  }
+}
 
-document.addEventListener('click',e=>{const b=e.target.closest('[data-route]');if(b){e.preventDefault();route(b.dataset.route)}});window.addEventListener('hashchange',()=>route(location.hash.slice(1)));
-
-function escapeHTML(x){return String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-
-function render(type){const q=el(type+'Query').value.trim().toLowerCase();const filter=el(type+'Filter').value;const found=items[type].filter(x=>(filter==='all'||x.category===filter)&&(!q||(x.title+' '+x.desc+' '+x.keywords+' '+x.category).toLowerCase().includes(q)));el(type+'Count').textContent=found.length+'件のサンプル';el(type+'Cards').innerHTML=found.length?found.map(x=>`<article class="item"><div class="art" aria-hidden="true">${x.emoji}</div><div class="itembody"><span class="pill">${escapeHTML(x.category)}</span><h3>${escapeHTML(x.title)}</h3><p>${escapeHTML(x.desc)}</p><div class="itembottom"><span class="meta">架空のサンプル</span><button class="btn secondary" type="button" data-detail="${x.id}">詳しく見る</button></div></div></article>`).join(''):'<div class="empty">一致するサンプルはありません。検索条件を変えてみてね。</div>';}
-
-['shop','activity'].forEach(t=>{['Query','Filter'].forEach(s=>el(t+s).addEventListener(s==='Query'?'input':'change',()=>render(t)));render(t);});
-
-document.addEventListener('click',e=>{const btn=e.target.closest('[data-detail]');if(!btn)return;chosen=Object.values(items).flat().find(x=>x.id===btn.dataset.detail);if(!chosen)return;el('dialogArt').textContent=chosen.emoji;el('dialogTitle').textContent=chosen.title;el('dialogCategory').textContent=chosen.category;el('dialogDescription').textContent=chosen.desc;el('dialogNote').textContent=chosen.note;el('detailDialog').showModal();});
-
-el('closeDialog').addEventListener('click',()=>el('detailDialog').close());el('detailDialog').addEventListener('click',e=>{if(e.target===el('detailDialog'))el('detailDialog').close()});el('dialogDraft').addEventListener('click',()=>{if(!chosen)return;el('helpType').value=chosen.id[0]==='s'?'くらびん（商品・作品）':'地域の活動・参加';el('helpMessage').value='「'+chosen.title+'」について詳しく知りたいです。';el('detailDialog').close();route('help');});
-
-const checks=['行き先・目的を決める','移動手段を調べる','目的地の設備を調べる','宿泊が必要か確認する','必要な支援窓口を調べる'];const storageKey='kuraku-portal-trip-checks-v01';let saved=[];try{saved=JSON.parse(localStorage.getItem(storageKey)||'[]');if(!Array.isArray(saved))saved=[];}catch(e){saved=[];}
-
-function showChecks(){el('tripChecklist').innerHTML=checks.map((x,i)=>`<label><input type="checkbox" data-check="${i}" ${saved.includes(i)?'checked':''}><span>${escapeHTML(x)}</span></label>`).join('');}showChecks();el('tripChecklist').addEventListener('change',e=>{const b=e.target.closest('[data-check]');if(!b)return;const id=Number(b.dataset.check);saved=b.checked?[...new Set([...saved,id])]:saved.filter(x=>x!==id);try{localStorage.setItem(storageKey,JSON.stringify(saved))}catch(e){} });el('tripReset').addEventListener('click',()=>{saved=[];try{localStorage.removeItem(storageKey)}catch(e){}showChecks();flash('チェックをリセットしました');});
-
-el('makeTripDraft').addEventListener('click',()=>{el('tripDraft').textContent='【おでかけ相談の下書き】\n種類：'+el('tripKind').value+'\n知りたいこと：'+el('tripConcern').value+'\n\nまず、対応可能な相談範囲や情報の調べ方を知りたいです。\n\n※試作版で生成した文章です。予約・手配はされていません。';el('tripDraftWrap').hidden=false;flash('下書きを作成しました');});
-
-el('makeHelpDraft').addEventListener('click',()=>{const t=el('helpMessage').value.trim();el('helpDraft').textContent='【相談メモ】\nテーマ：'+el('helpType').value+(t?'\n相談内容：'+t:'')+'\n\n※試作版で作成したメモです。送信はされていません。';el('helpDraftWrap').hidden=false;flash('相談メモを作成しました');});
-
-function flash(s){const t=el('toast');t.textContent=s;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500)}
-
-document.addEventListener('click',async e=>{const b=e.target.closest('[data-copy]');if(!b)return;const t=el(b.dataset.copy)?.textContent||'';try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);flash('コピーしました');}else{const temp=document.createElement('textarea');temp.value=t;temp.style.position='fixed';temp.style.opacity='0';document.body.appendChild(temp);temp.select();const ok=document.execCommand('copy');temp.remove();flash(ok?'コピーしました':'コピーできませんでした。文章を選択してコピーしてください');}}catch(err){flash('コピーできませんでした。文章を選択してコピーしてください');}});
-
-route(location.hash.slice(1)||'home');
-
-})();
-
+const initial=location.hash.substring(1);
+if(['home','shop','trip','activity','help'].includes(initial)){
+  show(initial);
+}
 </script>
-
 </body>
-
 </html>
